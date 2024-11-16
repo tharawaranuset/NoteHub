@@ -35,25 +35,31 @@ export async function handleCreateItem() {
   const subjectToAdd = document.getElementById("subject-to-add");
   const noteToAdd = document.getElementById("note-to-add");
 
-  const payload = {
-    name: nameToAdd.value,
-    subject: subjectToAdd.value,
-    note: noteToAdd.value,
-  };
+  if (!nameToAdd.value.trim() || subjectToAdd.value.trim()==="ทั้งหมด" || !noteToAdd.value.trim()) {
+    alert("Name, Subject, and Note are required!");
+    return; // Exit if validation fails
+  }
+  else {
+    const payload = {
+      name: nameToAdd.value.trim(),
+      subject: subjectToAdd.value.trim(),
+      note: noteToAdd.value.trim(),
+    };
 
-  await createItem(payload);
-  await fetchAndDrawTable();
-  
-  nameToAdd.value = "0";
-  subjectToAdd.value = "ทั้งหมด";
-  noteToAdd.value = "";
-  clearFilter();
+    await createItem(payload);
+    await fetchAndDrawTable();
+    
+    nameToAdd.value = "0";
+    subjectToAdd.value = "ทั้งหมด";
+    noteToAdd.value = "";
+
+    clearFilter();
+  }
 }
 
 export async function clearFilter() {
   document.getElementById("filter-name").value = "ทั้งหมด";
   document.getElementById("filter-subject").value = "ทั้งหมด";
-  document.getElementById("subject-to-add").value = "ทั้งหมด";
 }
 
 export async function handleFilterItem() {

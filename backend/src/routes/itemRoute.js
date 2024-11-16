@@ -10,8 +10,6 @@ router.delete("/:id", itemController.deleteItem);
 // TODO3: add a router for the filter function
 router.get("/filter",itemController.filterItems);
 
-// routes/memberRoutes.js
-// import express from "express";
 import * as memberController from "../controllers/memberController.js";
 
 

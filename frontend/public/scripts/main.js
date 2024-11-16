@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const addItemButton = document.getElementById("add-newrow");
   addItemButton.addEventListener("click", () => {
+    event.preventDefault();
     handleCreateItem();
   });
 

@@ -1,6 +1,7 @@
 import Item from "../models/itemModel.js";
 
 export const createItem = async (req, res) => {
+  // if(!req.body.name || !req.body.subject || !req.body.note){
   try {
     const newItem = new Item(req.body);
     await newItem.save();
@@ -14,6 +15,8 @@ export const createItem = async (req, res) => {
     }
   }
 };
+
+
 
 export const getItems = async (req, res) => {
   const items = await Item.find();

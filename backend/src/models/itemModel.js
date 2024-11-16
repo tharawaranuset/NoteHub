@@ -13,6 +13,10 @@ const itemSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  imageUrl: {
+    type: String, // URL or path to the uploaded image
+    required: false,
+  },
 });
 
 const Item = mongoose.model("Item", itemSchema);

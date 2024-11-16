@@ -46,16 +46,22 @@ export async function populateMembers() {
 // Handle creating a new member
 export async function handleCreateMember() {
   const nameToAdd = document.getElementById("member-name-to-add");
+  if (!nameToAdd.value.trim()) {
+    alert("Name is required!");
+    return; // Exit if validation fails
+  }
+  else {
+    // Call the API to create the member
+    await createMember({ name: nameToAdd.value.trim() });
 
-  // Call the API to create the member
-  await createMember({ name: nameToAdd.value });
+    // Refresh the member list and table
+    await fetchAndDrawTable();
+    await populateMembers();
 
-  // Refresh the member list and table
-  await fetchAndDrawTable();
-  await populateMembers();
-
-  // Clear the input field
-  nameToAdd.value = "";
+    // Clear the input field
+    nameToAdd.value = "";
+  }
+  
 }
 
 // Handle deleting a member

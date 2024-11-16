@@ -7,31 +7,31 @@
   </head>
 
   <body>
-    <section>
+    <section class="app-header">
       <header><h1 id="app-name">NoteHub</h1></header>
     </section>
 
-    <section>
+    <section class="add-and-filter">
+      <h2 class="section-title">ตัวกรองโน้ต</h2>
+      <select id="filter-name"></select>
+      <select id="filter-subject">
+        <option value="ทั้งหมด">-- ทั้งหมด --</option>
+        <option value="Maths">คณิตศาสตร์</option>
+        <option value="Science">วิทยาศาสตร์</option>
+        <option value="English">ภาษาอังกฤษ</option>
+        <option value="History">ประวัติศาสตร์</option>
+      </select>
+      <button id="filter-button">กรอง</button>
+
       <header>
         <h2 class="section-title">รายชื่อผู้มีสิทธิ์อัปโหลด</h2>
       </header>
       <ul id="member-list"></ul>
       <input id="member-name-to-add" />
       <button id="add-member">เพิ่ม</button>
-
-      <h2 class="section-title">ตัวกรองโน้ต</h2>
-      <select id="filter-name"></select>
-      <select id="filter-subject">
-        <option value="ทั้งหมด">-- ทั้งหมด --</option>
-        <option value="math">คณิตศาสตร์</option>
-        <option value="science">วิทยาศาสตร์</option>
-        <option value="english">ภาษาอังกฤษ</option>
-        <option value="history">ประวัติศาสตร์</option>
-      </select>
-      <button id="filter-button">กรอง</button>
     </section>
 
-    <section>
+    <section class="table">
       <header><h2 class="section-title">All Notes</h2></header>
       <table id="main-table">
         <thead>
@@ -48,24 +48,69 @@
         <tfoot>
           <tr id="newrow-form">            
             <td>
-              <select id="name-to-add"></select>
+              <select id="name-to-add">
+
+              </select>
             </td>
             <td>
               <select id="subject-to-add">
                 <option value="ทั้งหมด">-- ทั้งหมด --</option>
-                <option value="math">คณิตศาสตร์</option>
-                <option value="science">วิทยาศาสตร์</option>
-                <option value="english">ภาษาอังกฤษ</option>
-                <option value="history">ประวัติศาสตร์</option>
+                <option value="Maths">คณิตศาสตร์</option>
+                <option value="Science">วิทยาศาสตร์</option>
+                <option value="English">ภาษาอังกฤษ</option>
+                <option value="History">ประวัติศาสตร์</option>
               </select>
             </td>
             <td><input id="note-to-add" type="text" /></td>
+
             <td><button id="add-newrow">เพิ่ม</button></td>
           </tr>
         </tfoot>
       </table>
     </section>
-
+    
     <script type="module" src="scripts/main.js"></script>
+    <!-- <script>
+      // Add event listener for the "เพิ่ม" button
+      document.getElementById("add-newrow").addEventListener("click", (event) => {
+        event.preventDefault(); // Prevent default form submission
+
+        // Get input values
+        const name = document.getElementById("name-to-add").value.trim();
+        const subject = document.getElementById("subject-to-add").value.trim();
+        const note = document.getElementById("note-to-add").value.trim();
+
+        // Validate inputs
+        if (!name || !subject || !note) {
+          alert("Name, Subject, and Note are required!");
+          return; // Exit if validation fails
+        }
+
+        // Add new row to the table
+        const tableBody = document.getElementById("main-table-body");
+        const newRow = document.createElement("tr");
+
+        newRow.innerHTML = `
+          <td>${name}</td>
+          <td>${subject}</td>
+          <td>${note}</td>
+          <td><button class="delete-row">ลบ</button></td>
+        `;
+
+        tableBody.appendChild(newRow);
+
+        // Clear input fields
+        document.getElementById("name-to-add").value = "";
+        document.getElementById("subject-to-add").value = "";
+        document.getElementById("note-to-add").value = "";
+
+        // Add event listener for delete button
+        newRow.querySelector(".delete-row").addEventListener("click", () => {
+          tableBody.removeChild(newRow);
+        });
+      });
+    </script> -->
+    
+        
   </body>
 </html>
