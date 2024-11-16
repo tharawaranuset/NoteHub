@@ -68,8 +68,7 @@ section {
 #main-table input,
 #main-table select,
 #filter-name,
-#lower-price,
-#upper-price,
+#filter-subject,
 #member-name-to-add {
   padding: 5px 10px;
   border-radius: 8px;

@@ -1,16 +1,16 @@
 import mongoose from "mongoose";
 
 const itemSchema = new mongoose.Schema({
-  item: {
-    type: String,
-    required: true,
-  },
   name: {
     type: String,
     required: true,
   },
-  price: {
-    type: Number,
+  subject: {
+    type: String,
+    required: true,
+  },
+  note: {
+    type: String,
     required: true,
   },
 });

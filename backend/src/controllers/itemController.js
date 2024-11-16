@@ -41,12 +41,12 @@ export const deleteItem = async (req, res) => {
 export const filterItems = async (req, res) => {
   // TODO3: implement this filter function
   try {
-    const { filterName, lowerPrice, upperPrice } = req.query;
+    const { filterName, filterSubject } = req.query;
 
     // Build the query object
     let query = {};
-    if (lowerPrice && upperPrice) {
-      query.price = { $gte: parseFloat(lowerPrice), $lte: parseFloat(upperPrice) };
+    if (filterSubject && filterSubject !== "ทั้งหมด") {
+      query.subject = filterSubject;
     }
 
     if (filterName && filterName !== "ทั้งหมด") {

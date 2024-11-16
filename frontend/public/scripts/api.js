@@ -22,12 +22,11 @@ export async function deleteItem(id, item) {
   });
 }
 
-export async function filterItems(filterName, lowerPrice, upperPrice) {
+export async function filterItems(filterName, filterSubject) {
   // Build the query string with the parameters
   const queryString = new URLSearchParams({
     filterName,
-    lowerPrice,
-    upperPrice
+    filterSubject
   }).toString();
 
   // Make the request with the query string
