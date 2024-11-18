@@ -2,17 +2,17 @@ import Like from "../models/likeModel.js";
 
 export const addLike = async (req, res) => {
   // if(!req.body.name || !req.body.subject || !req.body.note){
-    const { contentId, userIp } = req.body;
+    const { itemId, memberId } = req.body;
 
     try {
       // ตรวจสอบว่าไลค์นี้มีอยู่แล้วหรือไม่
-      const existingLike = await Like.findOne({ contentId, userIp });
+      const existingLike = await Like.findOne({ itemId, memberId });
       if (existingLike) {
         return res.status(400).json({ message: 'You have already liked this content.' });
       }
   
       // เพิ่มไลค์ใหม่
-      const newLike = new Like({ contentId, userIp });
+      const newLike = new Like({ itemId, memberId });
       await newLike.save();
   
       res.status(200).json({ message: 'Liked successfully!' });

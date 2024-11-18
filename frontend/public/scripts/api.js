@@ -61,15 +61,26 @@ export async function deleteMember(id) {
   });
 }
 
-export async function addLike(memberId,itemId) {
+export async function addLike(like_member_id,like_item_id) {
+
+    // ตรวจสอบว่าได้ค่าหรือไม่
+    if (!like_member_id || !like_item_id) {
+      console.error("Member ID หรือ Item ID ไม่ถูกต้อง");
+      return;
+    }
   await fetch(`${BACKEND_URL}/likes`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      memberId: memberId,  // ส่ง ID ของผู้ที่กด like
-      itemId: itemId       // ส่ง ID ของโน้ตที่ถูก like
+      memberId: like_member_id,
+      itemId: like_item_id,
     })
   });
+}
+
+export async function getLikes() {
+  const likes = await fetch(`${BACKEND_URL}/likes`).then((r) => r.json());
+  return likes;
 }

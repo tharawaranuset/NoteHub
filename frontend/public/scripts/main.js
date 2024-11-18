@@ -24,7 +24,21 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   const addLikeButton = document.getElementById("add-like");
-  addLikeButton.addEventListener("click", () => {
-      addLike()
+  addLikeButton.addEventListener("click", (event) => {
+    const button = event.target;
+    if (!button) {
+      console.error("ปุ่มไม่ถูกต้อง");
+      return;
+    }
+    const like_member_id = button.getAttribute("like_member_id");
+    const like_item_id = button.getAttribute("like_item_id");
+
+    if (!like_member_id || !like_item_id) {
+      console.error("Member ID หรือ Item ID ไม่ถูกต้อง");
+      return;
+    }
+    //console.log("like_member_id:", like_member_id, "like_item_id:", like_item_id);
+
+    addLike(like_member_id, like_item_id);
   });
 });

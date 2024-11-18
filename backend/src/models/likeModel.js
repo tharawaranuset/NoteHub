@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 const likeSchema = new mongoose.Schema({
   member: { type: mongoose.Schema.Types.ObjectId, ref: 'Member', required: false },
   item: { type: mongoose.Schema.Types.ObjectId, ref: 'Item', required: false },
-  timestamp: { type: Date, default: Date.now },
+
 });
 
 // สร้าง Model สำหรับ Like
