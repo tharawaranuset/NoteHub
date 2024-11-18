@@ -60,3 +60,16 @@ export async function deleteMember(id) {
     method: "DELETE",
   });
 }
+
+export async function addLike(memberId,itemId) {
+  await fetch(`${BACKEND_URL}/likes`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      memberId: memberId,  // ส่ง ID ของผู้ที่กด like
+      itemId: itemId       // ส่ง ID ของโน้ตที่ถูก like
+    })
+  });
+}

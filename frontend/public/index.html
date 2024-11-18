@@ -16,16 +16,18 @@
       <select id="filter-name"></select>
       <select id="filter-subject">
         <option value="ทั้งหมด">-- ทั้งหมด --</option>
-        <option value="Maths">คณิตศาสตร์</option>
-        <option value="Science">วิทยาศาสตร์</option>
-        <option value="English">ภาษาอังกฤษ</option>
-        <option value="History">ประวัติศาสตร์</option>
+        <option value="Maths">Maths</option>
+        <option value="Science">Science</option>
+        <option value="English">English</option>
+        <option value="History">History</option>
       </select>
       <button id="filter-button">กรอง</button>
 
       <header>
         <h2 class="section-title">รายชื่อผู้มีสิทธิ์อัปโหลด</h2>
       </header>
+      <button id="add-like">👍 Like</button>
+    <p>Likes: <span id="like-count">0</span></p>
       <ul id="member-list"></ul>
       <input id="member-name-to-add" />
       <button id="add-member">เพิ่ม</button>
@@ -55,10 +57,10 @@
             <td>
               <select id="subject-to-add">
                 <option value="ทั้งหมด">-- ทั้งหมด --</option>
-                <option value="Maths">คณิตศาสตร์</option>
-                <option value="Science">วิทยาศาสตร์</option>
-                <option value="English">ภาษาอังกฤษ</option>
-                <option value="History">ประวัติศาสตร์</option>
+                <option value="Maths">Maths</option>
+                <option value="Science">Science</option>
+                <option value="English">English</option>
+                <option value="History">History</option>
               </select>
             </td>
             <td><input id="note-to-add" type="text" /></td>

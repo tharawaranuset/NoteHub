@@ -1,3 +1,4 @@
+import { addLike } from "./api.js";
 import { handleCreateMember, populateMembers } from "./member.js";
 import { fetchAndDrawTable, handleCreateItem, handleFilterItem } from "./table.js";
 
@@ -20,5 +21,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const addMemberButton = document.getElementById("add-member");
   addMemberButton.addEventListener("click", () => {
     handleCreateMember();
+  });
+
+  const addLikeButton = document.getElementById("add-like");
+  addLikeButton.addEventListener("click", () => {
+      addLike()
   });
 });
