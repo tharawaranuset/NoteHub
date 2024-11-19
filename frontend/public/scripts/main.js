@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
     handleFilterItem();
   });
 
-  const addMemberButton = document.getElementById("add-member");
+  const addMemberButton = document.getElementById("add-newrow");
   addMemberButton.addEventListener("click", () => {
     handleCreateMember();
   });
@@ -41,4 +41,44 @@ document.addEventListener("DOMContentLoaded", () => {
 
     addLike(like_member_id, like_item_id);
   });
+
+  // Get references to the elements
+  // const noteInput = document.getElementById('note-to-add');
+  // const addCommentButton = document.getElementById('add-comment-button');
+
+  // // Listen for input events on the note-to-add field
+  // noteInput.addEventListener('input', () => {
+  //   if (noteInput.value.trim() !== '') {
+  //     addCommentButton.style.display = 'block'; // Show the button
+  //   } else {
+  //     addCommentButton.style.display = 'none'; // Hide the button
+  //   }
+  // });
+
+  // Optional: Add functionality for the Add Comment button
+  // document.getElementById('add-comment-button').addEventListener('click', function () {
+  //   const commentInputContainer = document.getElementById('comment-input-container');
+  //   commentInputContainer.style.display = 'block'; // Show the input container
+  // });
+  
+  // document.getElementById('post-comment-button').addEventListener('click', function () {
+  //   const commentInput = document.getElementById('comment-input');
+  //   const commentsList = document.getElementById('comments-list');
+  
+  //   const newComment = commentInput.value.trim();
+  
+  //   if (newComment) {
+  //     const commentElement = document.createElement('p');
+  //     commentElement.textContent = newComment;
+  //     commentsList.appendChild(commentElement);
+  
+  //     commentInput.value = ''; // Clear the input field
+  //     document.getElementById('comment-input-container').style.display = 'none'; // Hide the input container
+  //   } else {
+  //     alert('Please write a comment before posting!');
+  //   }
+  // });
+  
+
+
 });

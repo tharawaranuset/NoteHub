@@ -6,11 +6,9 @@ import { fetchAndDrawTable } from "./table.js";
 // Populate the member list and dropdowns
 export async function populateMembers() {
   const memberList = document.getElementById("member-list");
-  const nameSelect = document.getElementById("name-to-add");
   const filterSelect = document.getElementById("filter-name");
 
   memberList.innerHTML = "";
-  nameSelect.innerHTML = '<option value="0">-- เลือกผู้อัปโหลด --</option>';
   filterSelect.innerHTML = '<option value="ทั้งหมด">-- ทั้งหมด --</option>';
 
   // Fetch all members from the backend
@@ -28,11 +26,6 @@ export async function populateMembers() {
     div.appendChild(li);
     div.appendChild(button);
     memberList.appendChild(div);
-
-    // Add member to "name-to-add" dropdown
-    const option = document.createElement("option");
-    option.value = option.textContent = member.name;
-    nameSelect.appendChild(option);
   });
 
   // Add members to the "filter-name" dropdown
@@ -46,8 +39,10 @@ export async function populateMembers() {
 // Handle creating a new member
 export async function handleCreateMember() {
   const nameToAdd = document.getElementById("member-name-to-add");
-  if (!nameToAdd.value.trim()) {
-    alert("Name is required!");
+  const subjectToAdd = document.getElementById("subject-to-add");
+  const noteToAdd = document.getElementById("note-to-add");
+
+  if (!nameToAdd.value.trim()  || subjectToAdd.value.trim()==="ทั้งหมด" || !noteToAdd.value.trim()) {
     return; // Exit if validation fails
   }
   else {

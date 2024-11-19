@@ -29,8 +29,6 @@
       <button id="add-like" like_member_id="123" like_item_id="456">👍 Like</button>
     <p>Likes: <span id="like-count">0</span></p>
       <ul id="member-list"></ul>
-      <input id="member-name-to-add" />
-      <button id="add-member">เพิ่ม</button>
     </section>
 
     <section class="table">
@@ -50,9 +48,7 @@
         <tfoot>
           <tr id="newrow-form">            
             <td>
-              <select id="name-to-add">
-
-              </select>
+              <input id="member-name-to-add" type="text" />
             </td>
             <td>
               <select id="subject-to-add">
@@ -63,8 +59,9 @@
                 <option value="History">History</option>
               </select>
             </td>
-            <td><input id="note-to-add" type="text" /></td>
-
+            <td>
+              <input id="note-to-add" type="text" />              
+            </td>
             <td><button id="add-newrow">เพิ่ม</button></td>
           </tr>
         </tfoot>

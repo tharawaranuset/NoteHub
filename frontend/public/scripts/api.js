@@ -84,3 +84,21 @@ export async function getLikes() {
   const likes = await fetch(`${BACKEND_URL}/likes`).then((r) => r.json());
   return likes;
 }
+
+// Post a comment
+async function addComment(itemId, comment) {
+  return fetch(`${BACKEND_URL}/items/${itemId}/comments`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ comment }),
+  });
+}
+
+// Get comments
+async function getComments(itemId) {
+  const comments = await fetch(`${BACKEND_URL}/items/${itemId}/comments`).then((r) => r.json());
+
+  return comments;
+
+}
+
