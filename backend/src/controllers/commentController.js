@@ -40,3 +40,39 @@ export const getComments = async (req, res) => {
     res.status(500).json({ message: "Failed to fetch comments", error: error.message });
   }
 };
+
+export const deleteComment = async (req, res) => {
+  const { itemId, commentId } = req.params;
+  console.log("Item ID:", itemId);
+  console.log("Comment ID:", commentId);
+
+  try {
+    // Find the item by its ID
+    const item = await Item.findById(itemId);
+    if (!item) {
+      return res.status(404).json({ error: "Item not found" });
+    }
+
+    // Find the comment in the comments array and remove it
+    const updatedComments = item.comments.filter(
+      (comment) => comment._id.toString() !== commentId
+    );
+
+    if (updatedComments.length === item.comments.length) {
+      return res.status(404).json({ error: "Comment not found" }); // Comment ID not found
+    }
+
+    // Update the comments array and save the item
+    item.comments = updatedComments;
+    await item.save();
+
+    res.status(200).json({
+      message: "Comment successfully deleted",
+      comments: item.comments, // Return the updated list of comments
+    });
+  } catch (err) {
+    console.error("Error deleting comment:", err);
+    res.status(500).json({ error: "Internal server error." });
+  }
+};
+

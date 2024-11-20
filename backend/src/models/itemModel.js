@@ -1,7 +1,8 @@
 import mongoose from "mongoose";
 
-const CommentSchema = new mongoose.Schema({
+const commentSchema = new mongoose.Schema({
   text: { type: String, required: true },
+  author: { type: String, default: "Anonymous" },
   createdAt: { type: Date, default: Date.now },
 });
 
@@ -22,7 +23,7 @@ const itemSchema = new mongoose.Schema({
     type: String, // URL or path to the uploaded image
     required: false,
   },
-  comments: [CommentSchema], // Embed comments
+  comments: [commentSchema], // Embed comments
 });
 
 const Item = mongoose.model("Item", itemSchema);

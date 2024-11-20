@@ -4,7 +4,7 @@ import cors from "cors";
 import ItemRoute from "./routes/itemRoute.js";
 import MemberRoute from "./routes/memberRoute.js";
 import LikeRoute from "./routes/likeRoute.js";
-
+import commentRoutes from "./routes/itemRoute.js";
 const app = express();
 
 // body-parser

@@ -86,19 +86,34 @@ export async function getLikes() {
 }
 
 // Post a comment
-async function addComment(itemId, comment) {
-  return fetch(`${BACKEND_URL}/items/${itemId}/comments`, {
+export async function addComments(itemId, commentText) {
+  const response = await fetch(`${BACKEND_URL}/items/${itemId}/comments`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ comment }),
+    body: JSON.stringify({ comment: commentText }),
   });
+  return response.json();
 }
 
 // Get comments
-async function getComments(itemId) {
-  const comments = await fetch(`${BACKEND_URL}/items/${itemId}/comments`).then((r) => r.json());
+export async function getComments(itemId) {
+  const response = await fetch(`${BACKEND_URL}/items/${itemId}/comments`);
+  return response.json();
+}
 
-  return comments;
-
+export async function deleteComment(itemId, commentId) {
+  console.log("Item ID:", itemId);
+  console.log("Comment ID:", commentId);
+  
+  await fetch(`${BACKEND_URL}/items/${itemId}/comments/${commentId}`, {
+    method: "DELETE",
+  //   });
+  //   if (!response.ok) {
+  //     throw new Error("Failed to delete comment");
+  //   }
+  // } catch (error) {
+  //   console.error("Error deleting comment:", error);
+  //   alert("An error occurred while deleting the comment.");
+  })
 }
 
