@@ -19,8 +19,4 @@ router.get("/", memberController.getMembers);  // Get all members
 router.post("/", memberController.createMember);  // Create a new member
 router.delete("/:id", memberController.deleteMember);  // Delete a member by ID
 
-router.post("/:id/comments", commentController.addComment); // Add a comment
-router.get("/:id/comments", commentController.getComments); // Get all comments
-router.delete("/:id/comments/:commentId", commentController.deleteComment);  // Delete a member by ID
-
 export default router;

@@ -42,37 +42,33 @@ export const getComments = async (req, res) => {
 };
 
 export const deleteComment = async (req, res) => {
-  const { itemId, commentId } = req.params;
-  console.log("Item ID:", itemId);
-  console.log("Comment ID:", commentId);
+  const { id, commentId } = req.params;
 
   try {
-    // Find the item by its ID
-    const item = await Item.findById(itemId);
+    const item = await Item.findById(id);
     if (!item) {
       return res.status(404).json({ error: "Item not found" });
     }
 
-    // Find the comment in the comments array and remove it
+    // Find and filter out the comment
     const updatedComments = item.comments.filter(
       (comment) => comment._id.toString() !== commentId
     );
 
     if (updatedComments.length === item.comments.length) {
-      return res.status(404).json({ error: "Comment not found" }); // Comment ID not found
+      return res.status(404).json({ error: "Comment not found" });
     }
 
-    // Update the comments array and save the item
+    // Save updated comments
     item.comments = updatedComments;
     await item.save();
 
     res.status(200).json({
       message: "Comment successfully deleted",
-      comments: item.comments, // Return the updated list of comments
+      comments: item.comments,
     });
   } catch (err) {
-    console.error("Error deleting comment:", err);
+    console.error("Error deleting comment:", err.message);
     res.status(500).json({ error: "Internal server error." });
   }
 };
-

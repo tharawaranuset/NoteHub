@@ -4,7 +4,7 @@ import cors from "cors";
 import ItemRoute from "./routes/itemRoute.js";
 import MemberRoute from "./routes/memberRoute.js";
 import LikeRoute from "./routes/likeRoute.js";
-import commentRoutes from "./routes/itemRoute.js";
+import commentRoutes from "./routes/commentRoute.js";
 const app = express();
 
 // body-parser
@@ -18,4 +18,5 @@ app.use(cors());
 app.use("/items", ItemRoute);
 app.use("/members", MemberRoute);
 app.use("/likes", LikeRoute);
+app.use("/comments", commentRoutes);
 export default app;
