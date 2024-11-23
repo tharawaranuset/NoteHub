@@ -9,9 +9,8 @@ const router = express.Router();
 router.get("/", itemController.getItems);
 router.post("/", itemController.createItem);
 router.delete("/:id", itemController.deleteItem);
-// TODO3: add a router for the filter function
 router.get("/filter",itemController.filterItems);
-
+router.patch("/:itemId",itemController.likeItems);
 
 
 

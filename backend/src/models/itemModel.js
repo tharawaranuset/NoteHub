@@ -23,6 +23,11 @@ const itemSchema = new mongoose.Schema({
     type: String, // URL or path to the uploaded image
     required: false,
   },
+  likes:{
+    type: [String], // อาร์เรย์ของ userId ที่ไลค์
+    default: [],
+    required: true,
+  },
   comments: [commentSchema], // Embed comments
 });
 
