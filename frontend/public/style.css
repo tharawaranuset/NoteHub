@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 @import url("https://fonts.googleapis.com/css2?family=Mitr:wght@200;400;600&display=swap");
 
 body {
@@ -379,3 +380,253 @@ section {
     margin-bottom: 8px;
   }
 }
+||||||| empty tree
+=======
+@import url("https://fonts.googleapis.com/css2?family=Mitr:wght@200;400;600&display=swap");
+
+body {
+  font-family: "Mitr", sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background-color: #f5f5f5;
+}
+
+.app-header {
+  background-color: #1e90ff;
+  color: white;
+  text-align: center;
+  padding: 20px 0;
+}
+
+#app-name {
+  font-size: 2em;
+  font-weight: bold;
+  margin: 0;
+  text-align: center;
+}
+
+section {
+  margin: 20px 0;
+}
+
+.add-and-filter {
+  text-align: center;
+}
+
+.section-title {
+  font-size: 1.6em;
+  font-weight: normal;
+  margin: 0;
+  color: #1e90ff;
+}
+
+.add-and-filter > header > .section-title {
+  font-size: 1.2em;
+  font-weight: normal;
+  margin: 20px 0;
+  color: #1e90ff;
+}
+
+.section-subtitle {
+  font-size: 0.8em;
+  font-weight: lighter;
+  line-height: 80%;
+}
+
+#member-list {
+  font-size: 0.8em;
+  align-items: center;
+  list-style: inside;
+}
+
+#member-list div {
+  display: flex;
+  margin: 4px 0px;
+  column-gap: 4px;
+}
+
+.table {
+  padding: 10px;
+}
+
+#main-table {
+  padding: 0;
+  width: 100%;
+  background: #eee;
+  border-radius: 8px;
+  box-shadow: 1px 1px 1px 0 rgba(0, 0, 0, 0.1);
+  border-collapse: collapse;
+  overflow: hidden;
+}
+
+#main-table > thead {
+  background: #555;
+  color: white;
+}
+
+#main-table > thead > tr > th {
+  font-weight: lighter;
+  text-align: left;
+}
+
+#main-table td,
+#main-table th {
+  padding: 5px 10px;
+  font-weight: lighter;
+  text-align: left;
+}
+
+#main-table {
+  width: 100%; /* Set to auto to let the columns shrink naturally */
+}
+
+#main-table th:nth-child(1),
+#main-table td:nth-child(1) {
+  width: 10%; /* Allow this column to expand */
+}
+#main-table th:nth-child(2),
+#main-table td:nth-child(2) {
+  width: 10%; /* Allow this column to expand */
+}
+#main-table th:nth-child(3),
+#main-table td:nth-child(3) {
+  width: 65%; /* Allow this column to expand */
+}
+
+#main-table th:nth-child(4),
+#main-table td:nth-child(4) {
+  width: 15%; /* Allow this column to expand */
+}
+
+#note-to-add {
+  width: 90%;
+}
+
+#add-newrow {
+  flex-shrink: 0; /* Prevent the button from shrinking */
+  width: 60px; /* Set a fixed width for the button */
+  padding: 5px 10px; /* Adjust button padding if needed */
+}
+
+#main-table input,
+#main-table select,
+#filter-name,
+#filter-subject,
+#member-name-to-add {
+  padding: 5px 10px;
+  border-radius: 8px;
+  border: 1px solid #aaa;
+}
+
+#main-table button,
+#add-member,
+#member-list button {
+  border-radius: 8px;
+  padding: 5px 10px;
+  border: 1px solid #aaa;
+  background: white;
+  width: auto;
+  cursor: pointer;
+  text-align: center;
+}
+
+#main-table button:hover,
+#add-member:hover,
+#member-list button:hover {
+  background: rgb(255, 200, 105);
+  color: white;
+}
+
+#filter-button {
+  color: black;
+  border-radius: 8px;
+  padding: 5px 10px;
+  border: 1px solid #aaa;
+  background: white;
+  width: 60px;
+  cursor: pointer;
+}
+
+#filter-button:hover {
+  color: white;
+  animation: filtering 10s infinite linear;
+}
+
+#add-like {
+  color: black;
+  border-radius: 8px;
+  padding: 5px 10px;
+  border: 1px solid #aaa;
+  background: white;
+  width: auto;
+  cursor: pointer;
+}
+
+#add-like:hover {
+  color: white;
+  animation: filtering 10s infinite linear;
+}
+
+#add-comment-button:hover {
+  background-color: #218838;
+}
+
+#comment-input-container {
+  margin-top: 10px;
+}
+
+#comment-input {
+  width: 100%;
+  height: 60px;
+  margin-bottom: 10px;
+}
+
+#post-comment-button:hover {
+  background-color: #0056b3;
+}
+
+#comments-list {
+  margin-top: 20px;
+  border-top: 1px solid #ccc;
+  padding-top: 10px;
+}
+
+@keyframes filtering {
+  0% {
+    background: #ff0000;
+  }
+
+  12.5% {
+    background: #ffa500;
+  }
+
+  25% {
+    background: #ffff00;
+  }
+
+  37.5% {
+    background: #008000;
+  }
+
+  50% {
+    background: #0000ff;
+  }
+
+  62.5% {
+    background: #4b0082;
+  }
+
+  75% {
+    background: purple;
+  }
+
+  87.5% {
+    background: #ee82ee;
+  }
+
+  100% {
+    background: #ff0000;
+  }
+}
+>>>>>>> 4cbffb31080ae9ff1a84befa383667974a90a44d
