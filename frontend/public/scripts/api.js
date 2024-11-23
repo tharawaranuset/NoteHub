@@ -34,6 +34,17 @@ export async function likeItem(itemId,userId,likeButton) {
   })
 }
 
+export async function editItem(itemId,newNote) {
+  //console.log(userId);
+  await fetch(`${BACKEND_URL}/items/${itemId}/edit`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ note: newNote }),
+  });
+}
+
 export async function filterItems(filterName, filterSubject) {
   // Build the query string with the parameters
   const queryString = new URLSearchParams({

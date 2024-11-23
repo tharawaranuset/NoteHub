@@ -1,16 +1,19 @@
 
-import { createItem, deleteItem, getItems, filterItems, addComments, getComments,deleteComment,likeItem} from "./api.js";
+import { createItem, deleteItem, getItems, filterItems, addComments, getComments,deleteComment,likeItem, editItem} from "./api.js";
 
 function drawTable(items) {
   const table = document.getElementById("main-table-body");
   table.innerHTML = ""; // Clear the table before rendering
   for (const item of items) {
     const row = table.insertRow(); // Create a new row
+    
     // Populate row with data
     row.insertCell().innerText = item.name;
     row.insertCell().innerText = item.subject;
-    row.insertCell().innerText = item.note;
+    const noteCell = row.insertCell();
+    noteCell.innerText = item.note; // เพิ่มโน้ต
     row.insertCell().innerText = item.likes.length;
+    
     const actionCell = row.insertCell();
 
     // Create Delete button
@@ -32,14 +35,13 @@ function drawTable(items) {
       userId = `user_${Math.random().toString(36).substr(2, 9)}`;
       localStorage.setItem("userId", userId);  // เก็บ userId ลงใน Local Storage
     }
+
     const likeButton = document.createElement("button");
     likeButton.innerText = "ไลค์";
     if(item.likes.includes(userId)){
       likeButton.innerText = "อันไลค์";
     }
-
     likeButton.addEventListener("click", () => handleLikeItem(item._id,likeButton));
-    
 
     const newrow = table.insertRow();
     commentButton.addEventListener("click", (e) => {
@@ -110,10 +112,16 @@ function drawTable(items) {
       });
     });
 
+    const editButton = document.createElement("button");
+    editButton.innerText = "แก้ไข";
+    editButton.addEventListener("click", () => handleEditItem(item._id, item,noteCell));
+    actionCell.appendChild(editButton);
+
     actionCell.appendChild(deleteButton);
     actionCell.appendChild(commentButton);
     actionCell.appendChild(viewCommentButton);
     actionCell.appendChild(likeButton);
+    actionCell.appendChild(editButton);
   }
 }
 
@@ -144,6 +152,36 @@ export async function handleLikeItem(itemId,likeButton) {
 
   await fetchAndDrawTable();
   clearFilter();
+}
+
+async function handleEditItem(itemId, item, noteCell) {
+  noteCell.innerHTML = "";
+
+  // สร้าง input สำหรับแก้ไขข้อความ
+  const input = document.createElement("input");
+  input.type = "text";
+  input.value = item.note; // แสดงโน้ตเดิมใน input
+  
+  input.style.width = "100%";
+  input.style.boxSizing = "border-box";
+  input.style.height = "100%";
+
+  const saveButton = document.createElement("button");
+  saveButton.innerText = "บันทึก";
+  saveButton.addEventListener("click", async () => {
+    const newNote = input.value; // รับค่าที่ผู้ใช้แก้ไข
+    if (newNote.trim() !== "") {
+      await editItem(itemId, newNote); // เรียก API แก้ไข
+      item.note = newNote; // อัปเดตข้อมูลในแถว
+      noteCell.innerText = newNote; // แสดงข้อความที่แก้ไขแล้ว
+    } else {
+      alert("ข้อความไม่ควรว่างเปล่า!");
+    }
+  });
+
+  // เพิ่ม input และปุ่มบันทึกใน noteCell
+  noteCell.appendChild(input);
+  noteCell.appendChild(saveButton);
 }
 
 export async function handleCreateItem() {
@@ -232,3 +270,4 @@ function updateCommentList(comments, actionCell, itemId) {
   // Append the updated comment list to the action cell
   actionCell.appendChild(commentList);
 }
+

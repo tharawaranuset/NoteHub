@@ -11,6 +11,7 @@ router.post("/", itemController.createItem);
 router.delete("/:id", itemController.deleteItem);
 router.get("/filter",itemController.filterItems);
 router.patch("/:itemId",itemController.likeItems);
+router.patch("/:itemId/edit",itemController.editItems);
 
 
 
