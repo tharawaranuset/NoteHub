@@ -155,6 +155,7 @@ export async function handleLikeItem(itemId,likeButton) {
 }
 
 async function handleEditItem(itemId, item, noteCell) {
+  // ลบข้อความเดิมออกจาก noteCell
   noteCell.innerHTML = "";
 
   // สร้าง input สำหรับแก้ไขข้อความ
@@ -162,26 +163,40 @@ async function handleEditItem(itemId, item, noteCell) {
   input.type = "text";
   input.value = item.note; // แสดงโน้ตเดิมใน input
   
+  // ปรับขนาดให้เหมาะสม
   input.style.width = "100%";
   input.style.boxSizing = "border-box";
-  input.style.height = "100%";
+  input.style.height = "30px"; // ความสูงของ input อาจปรับได้ตามต้องการ
 
+  // สร้างปุ่มบันทึก
   const saveButton = document.createElement("button");
   saveButton.innerText = "บันทึก";
   saveButton.addEventListener("click", async () => {
     const newNote = input.value; // รับค่าที่ผู้ใช้แก้ไข
     if (newNote.trim() !== "") {
-      await editItem(itemId, newNote); // เรียก API แก้ไข
-      item.note = newNote; // อัปเดตข้อมูลในแถว
+      // เรียก API แก้ไขโน้ต
+      await editItem(itemId, newNote); 
+      
+      // อัปเดตข้อมูลในแถวและเซลล์
+      item.note = newNote;
       noteCell.innerText = newNote; // แสดงข้อความที่แก้ไขแล้ว
     } else {
       alert("ข้อความไม่ควรว่างเปล่า!");
     }
   });
 
-  // เพิ่ม input และปุ่มบันทึกใน noteCell
+  // สร้างปุ่มยกเลิก (ถ้าผู้ใช้ต้องการยกเลิกการแก้ไข)
+  const cancelButton = document.createElement("button");
+  cancelButton.innerText = "ยกเลิก";
+  cancelButton.addEventListener("click", () => {
+    // คืนค่าให้เป็นข้อความเดิม
+    noteCell.innerText = item.note;
+  });
+
+  // เพิ่ม input, ปุ่มบันทึก และปุ่มยกเลิกใน noteCell
   noteCell.appendChild(input);
   noteCell.appendChild(saveButton);
+  noteCell.appendChild(cancelButton); // เพิ่มปุ่มยกเลิก
 }
 
 export async function handleCreateItem() {
