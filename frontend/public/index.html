@@ -14,6 +14,18 @@
       <header><h1 id="app-name">NoteHub</h1></header>
     </section>
 
+    <div id="welcomeMessage" style="display: none;">
+    <p>ยินดีต้อนรับ, <span id="userDisplayName"></span>!</p>
+    <button id="changeNameButton">เปลี่ยนชื่อ</button>
+  </div>
+
+  <!-- ส่วนกรอกชื่อผู้ใช้ -->
+  <div id="userForm">
+    <label for="username">กรุณากรอกชื่อของคุณ:</label>
+    <input type="text" id="username" />
+    <button id="saveNameButton">บันทึกชื่อ</button>
+  </div>
+
     <section class="add-and-filter">
       <h2 class="section-title">ตัวกรองโน้ต</h2>
       <select id="filter-name"></select>

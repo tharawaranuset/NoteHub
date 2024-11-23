@@ -9,6 +9,47 @@ document.addEventListener("DOMContentLoaded", () => {
 
   populateMembers();
 
+  let userId = localStorage.getItem("userId");
+  let userName = localStorage.getItem("userName");
+
+  // ถ้าไม่มี userId, สร้าง userId ใหม่
+  if (!userId) {
+    userId = `user_${Math.random().toString(36).substr(2, 9)}`;
+    localStorage.setItem("userId", userId);  // เก็บ userId ลงใน Local Storage
+  }
+
+  // ถ้ามีชื่อผู้ใช้แล้ว แสดงข้อความทักทาย
+  if (userName) {
+    document.getElementById("welcomeMessage").style.display = "block";
+    document.getElementById("userDisplayName").textContent = userName;
+    document.getElementById("userForm").style.display = "none";
+  } else {
+    document.getElementById("userForm").style.display = "block";
+    document.getElementById("welcomeMessage").style.display = "none";
+  }
+
+  // ฟังก์ชันบันทึกชื่อผู้ใช้
+  const saveNameButton = document.getElementById("saveNameButton");
+  saveNameButton.addEventListener("click", () => {
+    const usernameInput = document.getElementById("username").value;
+    if (usernameInput) {
+      localStorage.setItem("userName", usernameInput);  // เก็บชื่อผู้ใช้ใน Local Storage
+      document.getElementById("userDisplayName").textContent = usernameInput;
+      document.getElementById("welcomeMessage").style.display = "block";
+      document.getElementById("userForm").style.display = "none";
+    } else {
+      alert("กรุณากรอกชื่อผู้ใช้");
+    }
+  });
+
+  // ฟังก์ชันเปลี่ยนชื่อผู้ใช้
+  const changeNameButton = document.getElementById("changeNameButton");
+  changeNameButton.addEventListener("click", () => {
+    localStorage.removeItem("userName");  // ลบชื่อเดิม
+    document.getElementById("userForm").style.display = "block";
+    document.getElementById("welcomeMessage").style.display = "none";
+  });
+  
   const addItemButton = document.getElementById("add-newrow");
   addItemButton.addEventListener("click", () => {
     event.preventDefault();
@@ -24,24 +65,5 @@ document.addEventListener("DOMContentLoaded", () => {
   addMemberButton.addEventListener("click", () => {
     handleCreateMember();
   });
-
-  // const addLikeButton = document.getElementById("add-like");
-  // addLikeButton.addEventListener("click", (event) => {
-  //   const button = event.target;
-  //   if (!button) {
-  //     console.error("ปุ่มไม่ถูกต้อง");
-  //     return;
-  //   }
-  //   const like_member_id = button.getAttribute("like_member_id");
-  //   const like_item_id = button.getAttribute("like_item_id");
-
-  //   if (!like_member_id || !like_item_id) {
-  //     console.error("Member ID หรือ Item ID ไม่ถูกต้อง");
-  //     return;
-  //   }
-  //   //console.log("like_member_id:", like_member_id, "like_item_id:", like_item_id);
-
-  //   addLike(like_member_id, like_item_id);
-  // });
 
 });
