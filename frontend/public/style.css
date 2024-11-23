@@ -1,0 +1,381 @@
+@import url("https://fonts.googleapis.com/css2?family=Mitr:wght@200;400;600&display=swap");
+
+body {
+  font-family: "Mitr", sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background-color: #f5f5f5;
+}
+
+.app-header {
+  background-color: #1e90ff;
+  color: white;
+  text-align: center;
+  padding: 20px 0;
+}
+
+#app-name {
+  font-size: 2em;
+  font-weight: bold;
+  margin: 0;
+  text-align: center;
+}
+
+section {
+  margin: 20px 0;
+}
+
+.add-and-filter {
+  text-align: center;
+}
+
+.section-title {
+  font-size: 1.6em;
+  font-weight: normal;
+  margin: 0;
+  color: #1e90ff;
+}
+
+.add-and-filter > header > .section-title {
+  font-size: 1.2em;
+  font-weight: normal;
+  margin: 20px 0;
+  color: #1e90ff;
+}
+
+.section-subtitle {
+  font-size: 0.8em;
+  font-weight: lighter;
+  line-height: 80%;
+}
+
+#member-list {
+  font-size: 0.8em;
+  align-items: center;
+  list-style: inside;
+}
+
+#member-list div {
+  display: flex;
+  margin: 4px 0px;
+  column-gap: 4px;
+}
+
+.table {
+  padding: 10px;
+}
+
+#main-table {
+  padding: 0;
+  width: 100%;
+  background: #eee;
+  border-radius: 8px;
+  box-shadow: 1px 1px 1px 0 rgba(0, 0, 0, 0.1);
+  border-collapse: collapse;
+  overflow: hidden;
+}
+
+#main-table > thead {
+  background: #555;
+  color: white;
+}
+
+#main-table > thead > tr > th {
+  font-weight: lighter;
+  text-align: left;
+}
+
+#main-table td,
+#main-table th {
+  padding: 5px 10px;
+  font-weight: lighter;
+  text-align: left;
+}
+
+#main-table {
+  width: 100%; /* Set to auto to let the columns shrink naturally */
+}
+
+#main-table th:nth-child(1),
+#main-table td:nth-child(1) {
+  width: 10%; /* Allow this column to expand */
+}
+#main-table th:nth-child(2),
+#main-table td:nth-child(2) {
+  width: 10%; /* Allow this column to expand */
+}
+#main-table th:nth-child(3),
+#main-table td:nth-child(3) {
+  width: 65%; /* Allow this column to expand */
+}
+
+#main-table th:nth-child(4),
+#main-table td:nth-child(4) {
+  width: 15%; /* Allow this column to expand */
+}
+
+#note-to-add {
+  width: 90%;
+}
+
+#add-newrow {
+  flex-shrink: 0; /* Prevent the button from shrinking */
+  width: 60px; /* Set a fixed width for the button */
+  padding: 5px 10px; /* Adjust button padding if needed */
+}
+
+#main-table input,
+#main-table select,
+#filter-name,
+#filter-subject,
+#member-name-to-add {
+  padding: 5px 10px;
+  border-radius: 8px;
+  border: 1px solid #aaa;
+}
+
+#main-table button,
+#add-member,
+#member-list button {
+  border-radius: 8px;
+  padding: 5px 10px;
+  border: 1px solid #aaa;
+  background: white;
+  width: auto;
+  cursor: pointer;
+  text-align: center;
+}
+
+#main-table button:hover,
+#add-member:hover,
+#member-list button:hover {
+  background: rgb(255, 200, 105);
+  color: white;
+}
+
+#filter-button {
+  color: black;
+  border-radius: 8px;
+  padding: 5px 10px;
+  border: 1px solid #aaa;
+  background: white;
+  width: 60px;
+  cursor: pointer;
+}
+
+#filter-button:hover {
+  color: white;
+  animation: filtering 10s infinite linear;
+}
+
+#add-like {
+  color: black;
+  border-radius: 8px;
+  padding: 5px 10px;
+  border: 1px solid #aaa;
+  background: white;
+  width: auto;
+  cursor: pointer;
+}
+
+#add-like:hover {
+  color: white;
+  animation: filtering 10s infinite linear;
+}
+
+#add-comment-button:hover {
+  background-color: #218838;
+}
+
+#comment-input-container {
+  margin-top: 10px;
+}
+
+#comment-input {
+  width: 100%;
+  height: 60px;
+  margin-bottom: 10px;
+}
+
+#post-comment-button:hover {
+  background-color: #0056b3;
+}
+
+#comments-list {
+  margin-top: 20px;
+  border-top: 1px solid #ccc;
+  padding-top: 10px;
+}
+
+@keyframes filtering {
+  0% {
+    background: #ff0000;
+  }
+
+  12.5% {
+    background: #ffa500;
+  }
+
+  25% {
+    background: #ffff00;
+  }
+
+  37.5% {
+    background: #008000;
+  }
+
+  50% {
+    background: #0000ff;
+  }
+
+  62.5% {
+    background: #4b0082;
+  }
+
+  75% {
+    background: purple;
+  }
+
+  87.5% {
+    background: #ee82ee;
+  }
+
+  100% {
+    background: #ff0000;
+  }
+}
+/* --- Add Logo --- */
+.app-header {
+  font-size: 2em;
+  text-align: center;
+}
+
+#app-name::before {
+  content: "📝"; /* เพิ่ม emoji ที่ด้านหน้าชื่อ */
+  margin-right: 10px;
+}
+/* --- Media Queries for Responsive Design --- */
+
+/* สำหรับแท็บเล็ต (หน้าจอขนาด 768px ถึง 1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+  #app-name {
+    font-size: 1.8em;
+  }
+
+  .section-title {
+    font-size: 1.4em;
+  }
+
+  #main-table td,
+  #main-table th {
+    font-size: 0.9em;
+  }
+
+  #note-to-add {
+    width: 80%; /* ลดความกว้าง input บนแท็บเล็ต */
+  }
+
+  #add-newrow {
+    width: 80px; /* ขยายปุ่มเล็กน้อย */
+  }
+}
+
+/* สำหรับมือถือ (หน้าจอเล็กกว่า 768px) */
+@media (max-width: 767px) {
+  /* ปรับ Header */
+  #app-name {
+    font-size: 1.5em;
+  }
+
+  .app-header {
+    padding: 15px 0;
+  }
+
+  /* ปรับ Layout ของ Add and Filter Section */
+  .add-and-filter {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 0 10px;
+  }
+
+  #filter-name,
+  #filter-subject,
+  #filter-button {
+    width: 100%; /* ปรับให้เต็มความกว้าง */
+  }
+
+  /* ปรับ Table */
+  .table {
+    overflow-x: auto; /* ทำให้ตารางเลื่อนดูได้ในมือถือ */
+    padding: 10px;
+  }
+
+  #main-table th,
+  #main-table td {
+    font-size: 0.8em; /* ลดขนาดตัวอักษร */
+  }
+
+  #note-to-add,
+  #member-name-to-add {
+    width: 100%; /* ขยาย input ให้เต็ม */
+  }
+
+  #add-newrow {
+    width: 100%; /* ขยายปุ่มให้พอดีกับ input */
+    margin-top: 10px;
+  }
+
+  /* ซ่อนฟีเจอร์บางอย่างที่ไม่จำเป็น */
+  #member-list {
+    display: none; /* ซ่อนรายชื่อผู้มีสิทธิ์อัปโหลดในมือถือ */
+  }
+
+  /* เพิ่มระยะห่าง */
+  section {
+    padding: 10px 0;
+  }
+}
+
+/* สำหรับหน้าจอเล็กมาก (ต่ำกว่า 480px) */
+@media (max-width: 480px) {
+  /* ปรับขนาด Header */
+  #app-name {
+    font-size: 1.2em;
+  }
+
+  /* ลด Padding */
+  .app-header {
+    padding: 10px 0;
+  }
+
+  /* ปรับตัวอักษรให้เล็กลง */
+  .section-title {
+    font-size: 1.2em;
+  }
+
+  #main-table th,
+  #main-table td {
+    font-size: 0.7em;
+  }
+
+  #filter-name,
+  #filter-subject,
+  #filter-button,
+  #note-to-add,
+  #member-name-to-add {
+    padding: 8px; /* ลดขนาด Padding */
+  }
+
+  #add-newrow {
+    font-size: 0.9em;
+    padding: 5px;
+  }
+
+  /* เพิ่มระยะห่างระหว่าง Input */
+  .add-and-filter > select,
+  .add-and-filter > button {
+    margin-bottom: 8px;
+  }
+}
