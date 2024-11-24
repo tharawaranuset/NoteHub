@@ -6,25 +6,29 @@ body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  background-color: #f5f5f5;
+  background: linear-gradient(to bottom, #f5f5f5, #e3f2fd);
 }
 
 .app-header {
-  background-color: #1e90ff;
+  background: linear-gradient(to right, #555, #333);
   color: white;
   text-align: center;
   padding: 20px 0;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 #app-name {
   font-size: 2em;
   font-weight: bold;
   margin: 0;
-  text-align: center;
 }
 
 section {
   margin: 20px 0;
+  padding: 10px 20px;
+  border-radius: 8px;
+  background: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .add-and-filter {
@@ -34,21 +38,12 @@ section {
 .section-title {
   font-size: 1.6em;
   font-weight: normal;
-  margin: 0;
-  color: #1e90ff;
-}
-
-.add-and-filter > header > .section-title {
-  font-size: 1.2em;
-  font-weight: normal;
-  margin: 20px 0;
-  color: #1e90ff;
+  margin-bottom: 10px;
 }
 
 .section-subtitle {
-  font-size: 0.8em;
-  font-weight: lighter;
-  line-height: 80%;
+  font-size: 0.9em;
+  color: #888;
 }
 
 #member-list {
@@ -64,7 +59,7 @@ section {
 }
 
 .table {
-  padding: 10px;
+  padding: 20px;
 }
 
 #main-table {
@@ -72,19 +67,19 @@ section {
   width: 100%;
   background: #eee;
   border-radius: 8px;
-  box-shadow: 1px 1px 1px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   border-collapse: collapse;
   overflow: hidden;
 }
 
 #main-table > thead {
-  background: #555;
+  background: linear-gradient(to right, #555, #333);
   color: white;
 }
 
 #main-table > thead > tr > th {
-  font-weight: lighter;
-  text-align: left;
+  font-weight: normal;
+  padding: 10px;
 }
 
 #main-table td,
@@ -117,7 +112,10 @@ section {
 }
 
 #note-to-add {
-  width: 90%;
+  width: 100%;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
 }
 
 #add-newrow {
@@ -131,6 +129,7 @@ section {
 #filter-name,
 #filter-subject,
 #member-name-to-add {
+  transition: all 0.3s;
   padding: 5px 10px;
   border-radius: 8px;
   border: 1px solid #aaa;
@@ -139,6 +138,7 @@ section {
 #main-table button,
 #add-member,
 #member-list button {
+  transition: all 0.3s;
   border-radius: 8px;
   padding: 5px 10px;
   border: 1px solid #aaa;
@@ -148,11 +148,21 @@ section {
   text-align: center;
 }
 
+#add-newrow:hover {
+  animation: pulse 0.5s infinite;
+}
+
 #main-table button:hover,
 #add-member:hover,
 #member-list button:hover {
-  background: rgb(255, 200, 105);
+  background: #444;
   color: white;
+}
+
+#main-table input:focus {
+  border-color: #1e90ff;
+  box-shadow: 0 0 5px rgba(30, 144, 255, 0.5);
+  transform: scale(1.02);
 }
 
 #filter-button {
@@ -170,7 +180,7 @@ section {
   animation: filtering 10s infinite linear;
 }
 
-#add-like {
+/*#add-like {
   color: black;
   border-radius: 8px;
   padding: 5px 10px;
@@ -187,7 +197,7 @@ section {
 
 #add-comment-button:hover {
   background-color: #218838;
-}
+}*/
 
 #comment-input-container {
   margin-top: 10px;
@@ -301,6 +311,11 @@ section {
     padding: 0 10px;
   }
 
+  #userForm {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
   #filter-name,
   #filter-subject,
   #filter-button {
@@ -400,21 +415,28 @@ section {
 }
 
 #userForm input {
+  transition: all 0.3s;
+  display: inline;
   width: 100%;
   padding: 10px;
   border-radius: 8px;
   border: 1px solid #ccc;
   font-size: 1em;
   margin: 10px 0;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
 }
 
 #userForm input:focus {
   border-color: #1e90ff;
   box-shadow: 0 0 5px rgba(30, 144, 255, 0.5);
+  transform: scale(1.05);
 }
 
 #userForm #saveNameButton {
-  background-color: #1e90ff;
+  font-family: "Mitr", sans-serif;
+  background-color: #555;
   color: white;
   padding: 10px 20px;
   border-radius: 8px;
@@ -425,8 +447,19 @@ section {
   transition: background-color 0.3s ease;
 }
 
+/* Animations for saveNameButton*/
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+}
+
 #userForm #saveNameButton:hover {
-  background-color: #1c86e5;
+  animation: pulse 0.5s infinite;
+  background-color: #333;
 }
 
 /* สไตล์สำหรับส่วนต้อนรับ */
@@ -449,6 +482,7 @@ section {
 }
 
 #welcomeMessage #changeNameButton {
+  font-family: "Mitr", sans-serif;
   background-color: #ffc107;
   color: #333;
   border: none;
@@ -460,6 +494,7 @@ section {
 }
 
 #welcomeMessage #changeNameButton:hover {
+  animation: pulse 0.5s infinite;
   background-color: #e0a800;
 }
 
