@@ -9,7 +9,7 @@ export async function populateMembers() {
   const filterSelect = document.getElementById("filter-name");
 
   memberList.innerHTML = "";
-  filterSelect.innerHTML = '<option value="ทั้งหมด">-- ทั้งหมด --</option>';
+  filterSelect.innerHTML = '<option value="ทั้งหมด">-- ชื่อผู้อัปโหลดทั้งหมด --</option>';
 
   // Fetch all members from the backend
   const members = await getMembers();
