@@ -119,9 +119,9 @@ function drawTable(items) {
 
     actionCell.appendChild(deleteButton);
     actionCell.appendChild(commentButton);
-    actionCell.appendChild(viewCommentButton);
     actionCell.appendChild(likeButton);
     actionCell.appendChild(editButton);
+    actionCell.appendChild(viewCommentButton);
   }
 }
 
