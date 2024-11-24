@@ -1,16 +1,29 @@
 // controllers/memberController.js
 import Member from "../models/memberModel.js";
 import Item from "../models/itemModel.js";  // Import Item model to delete associated items
+import { response } from "express";
 
 // Create a new member
 export const createMember = async (req, res) => {
   try {
-    const { name } = req.body;
-    const newMember = new Member({ name });
+    const { userName } = req.body;
+
+    if (!userName) {
+      return res.status(400).json({ message: 'Name is required' });
+    }
+
+    const alreadyhave = await Member.findOne({ name: userName });
+    if (alreadyhave) {
+      return res.status(409).json({ message: 'Member already exists' });
+    }
+
+    const newMember = new Member({ name: userName });
     await newMember.save();
+
     res.status(200).json({ message: 'Member created successfully', member: newMember });
   } catch (err) {
-    res.status(500).json({ error: "Failed to create member" });
+    console.error('Error creating member:', err);  // เพิ่มข้อความที่ทำให้เห็นข้อผิดพลาดชัดเจนขึ้น
+    res.status(500).json({ error: 'Failed to create member', details: err.message });
   }
 };
 
@@ -26,22 +39,67 @@ export const getMembers = async (req, res) => {
 
 // Delete a member and remove associated items
 export const deleteMember = async (req, res) => {
-  const { id } = req.params;
-
+  const { userName } = req.params;
   try {
-    // Find the member by ID
-    const member = await Member.findById(id);
+    // ค้นหาสมาชิกตาม userName และลบข้อมูล
+    const member = await Member.findOne({ name: userName });
+    
+    if (!member) {
+      return res.status(404).json({ message: "ไม่พบสมาชิกที่ต้องการลบ" });
+    }
+    await Item.deleteMany({ name: { $in: member.name } });
+    // ลบสมาชิก
+    await Member.deleteOne({ _id: member._id });
+
+    res.status(200).json({ message: "ลบสมาชิกสำเร็จ" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "เกิดข้อผิดพลาดในการลบสมาชิก" });
+  }
+};
+
+export const updateMember = async (req, res) => {
+  try {
+    const { userName, id } = req.body;
+
+    // ค้นหาสมาชิกที่มีชื่อผู้ใช้ตรงกับ userName
+    const member = await Member.findOne({ name: userName });
+
     if (!member) {
       return res.status(404).json({ error: "Member not found" });
     }
 
-    // Delete all items associated with the member
-    await Item.deleteMany({ name: { $in: member.name } });
+    // เพิ่ม id ใหม่ลงใน list ของ items (สมมติว่า list เป็น array ที่เก็บ ids)
+    member.items.push(id);
 
-    // Now delete the member itself
-    await Member.findByIdAndDelete(id);
-    res.status(200).json({ message: "Member and associated items deleted successfully" });
+    // บันทึกการอัปเดต
+    await member.save();
+
+    // ส่งกลับคำตอบว่าอัปเดตสำเร็จ
+    res.status(200).json({ message: "Member updated successfully", member });
   } catch (err) {
-    res.status(500).json({ error: "Failed to delete member" });
+    console.error("Error updating member:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+
+};
+export const findMember = async(req,res) => {
+  const { userName } = req.query;
+
+  if (!userName) {
+    return res.status(400).json({ error: "Username is required" });
+  }
+
+  try {
+    const member = await Member.findOne({ name: userName });
+
+    if (!member) {
+      return res.status(404).json({ error: "Member not found" });
+    }
+
+    res.status(200).json(member);
+  } catch (err) {
+    console.error("Error finding member:", err);
+    res.status(500).json({ error: "Internal server error." });
   }
 };

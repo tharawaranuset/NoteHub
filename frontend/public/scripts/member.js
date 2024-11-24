@@ -1,6 +1,6 @@
 // member.js
 
-import { createMember, deleteMember, getMembers } from "./api.js";
+import { createMember, deleteMember, findMember, getMembers } from "./api.js";
 import { fetchAndDrawTable } from "./table.js";
 
 // Populate the member list and dropdowns
@@ -18,13 +18,13 @@ export async function populateMembers() {
   members.forEach((member) => {
     const li = document.createElement("li");
     li.textContent = member.name;
-    const button = document.createElement("button");
-    button.addEventListener("click", () => handleDeleteMember(member._id));
-    button.innerText = "ไล่";
+    // const button = document.createElement("button");
+    // button.addEventListener("click", () => handleDeleteMember(member.name));
+    // button.innerText = "ไล่";
 
     const div = document.createElement("div");
     div.appendChild(li);
-    div.appendChild(button);
+    // div.appendChild(button);
     memberList.appendChild(div);
   });
 
@@ -35,36 +35,51 @@ export async function populateMembers() {
     filterSelect.appendChild(option);
   });
 }
+export async function handleCreateNewMember() {
+  const userName = localStorage.getItem("userName");
 
+  await createMember(userName);
+  await fetchAndDrawTable();
+  await populateMembers();
+}
 // Handle creating a new member
 export async function handleCreateMember() {
-  const nameToAdd = document.getElementById("member-name-to-add");
+  const nameToAdd = document.getElementById("member-name-to-add").innerText;
   const subjectToAdd = document.getElementById("subject-to-add");
   const noteToAdd = document.getElementById("note-to-add");
 
-  if (!nameToAdd.value.trim()  || subjectToAdd.value.trim()==="ทั้งหมด" || !noteToAdd.value.trim()) {
+  if (!nameToAdd  || subjectToAdd.value.trim()==="ทั้งหมด" || !noteToAdd.value.trim()) {
     return; // Exit if validation fails
   }
   else {
     // Call the API to create the member
-    await createMember({ name: nameToAdd.value.trim() });
+    await createMember(nameToAdd);
 
     // Refresh the member list and table
     await fetchAndDrawTable();
     await populateMembers();
 
     // Clear the input field
-    nameToAdd.value = "";
+
   }
   
 }
-
 // Handle deleting a member
-export async function handleDeleteMember(id) {
+export async function handleDeleteMember(userName) {
   // Call the API to delete the member
-  await deleteMember(id);
+
+  await deleteMember(userName);
 
   // Refresh the member list and table
   await fetchAndDrawTable();
   await populateMembers();
+}
+
+export async function handleFindAndDeleteElementOfMember(userName) {
+  const member = await findMember(userName);
+  for (const itemId of member.items) {
+    console.log(itemId);
+    deleteItem(itemId);
+  }
+  
 }

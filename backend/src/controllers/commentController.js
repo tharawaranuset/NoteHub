@@ -5,7 +5,7 @@ import Item from "../models/itemModel.js";
 export const addComment = async (req, res) => {
   try {
     const { id } = req.params; // Get item ID
-    const { comment } = req.body; // Get comment text from the request body
+    const { comment ,author} = req.body; // Get comment text from the request body
 
     if (!comment || !comment.trim()) {
       return res.status(400).json({ message: "Comment cannot be empty!" });
@@ -16,7 +16,12 @@ export const addComment = async (req, res) => {
       return res.status(404).json({ message: "Item not found" });
     }
 
-    item.comments.push({ text: comment }); // Add the comment
+    if(author === null){
+      item.comments.push({ text: comment }); // Add the comment
+    }
+    else{
+      item.comments.push({ text: comment ,author: author}); // Add the comment
+    }
     await item.save(); // Save the updated item
 
     res.status(201).json({ message: "Comment added successfully!", comments: item.comments });

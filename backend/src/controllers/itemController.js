@@ -7,7 +7,7 @@ export const createItem = async (req, res) => {
     const newItem = new Item(req.body);
     await newItem.save();
 
-    res.status(200).json({ message: "OK" });
+    res.status(200).json({ message: "OK" ,id: newItem._id});
   } catch (err) {
     if (err.name === "ValidationError") {
       res.status(400).json({ error: "Bad Request" });

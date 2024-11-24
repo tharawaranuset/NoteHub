@@ -1,5 +1,5 @@
 
-import { createItem, deleteItem, getItems, filterItems, addComments, getComments,deleteComment,likeItem, editItem} from "./api.js";
+import { createItem, deleteItem, getItems, filterItems, addComments, getComments,deleteComment,likeItem, editItem, createMember, updateMember, findMember} from "./api.js";
 
 function drawTable(items) {
   const table = document.getElementById("main-table-body");
@@ -18,7 +18,7 @@ function drawTable(items) {
 
     // Create Delete button
     const deleteButton = document.createElement("button");
-    deleteButton.addEventListener("click", () => handleDeleteItem(item._id));
+    deleteButton.addEventListener("click", () => handleDeleteItem(item._id,item.name));
     deleteButton.innerText = "ลบ";
 
     // Create Comment button
@@ -58,9 +58,9 @@ function drawTable(items) {
           alert("Comment cannot be empty!");
           return;
         }
-      
+        const author = localStorage.getItem("userName");
         // Post the comment to the server
-        await addComments(item._id, commentText);
+        await addComments(item._id, commentText,author);
       
         // Clear the text area and UI elements for comment input
         e.target.disabled = false;
@@ -68,7 +68,7 @@ function drawTable(items) {
         actionCell.removeChild(textArea);
         actionCell.removeChild(cancelButton);
       
-        alert("Comment posted successfully!");
+        // alert("Comment posted successfully!");
       
         // Fetch and display the updated comments list dynamically
         const comments = await getComments(item._id);
@@ -132,10 +132,15 @@ export async function fetchAndDrawTable() {
   drawTable(items);
 }
 
-export async function handleDeleteItem(id) {
-  await deleteItem(id);
-  await fetchAndDrawTable();
-  clearFilter();
+export async function handleDeleteItem(id,name) {
+  if(name===localStorage.getItem("userName")){
+    await deleteItem(id);
+    await fetchAndDrawTable();
+    clearFilter();
+  }
+  else{
+    alert("This one is not your");
+  }
 }
 
 export async function handleLikeItem(itemId,likeButton) {
@@ -200,26 +205,31 @@ async function handleEditItem(itemId, item, noteCell) {
 }
 
 export async function handleCreateItem() {
-  const nameToAdd = document.getElementById("member-name-to-add");
+  const nameToAdd = document.getElementById("member-name-to-add").textContent;
+
   const subjectToAdd = document.getElementById("subject-to-add");
   const noteToAdd = document.getElementById("note-to-add");
-
-  if (!nameToAdd.value.trim() || subjectToAdd.value.trim()==="ทั้งหมด" || !noteToAdd.value.trim()) {
+  if(nameToAdd === "กรุณากรอกชื่อ"){
+    alert("กรุณากรอกชื่อ");
+    return;
+  }
+  if (subjectToAdd.value.trim()==="ทั้งหมด" || !noteToAdd.value.trim()) {
     alert("All fields are required!");
     return; // Exit if validation fails
   }
   else {
     const payload = {
-      name: nameToAdd.value.trim(),
+      name: nameToAdd,
       subject: subjectToAdd.value.trim(),
       note: noteToAdd.value.trim(),
       like: 0,
     };
-
-    await createItem(payload);
+    const id = await createItem(payload);
+    const userName=nameToAdd
+    await updateMember(userName,id);
     await fetchAndDrawTable();
     
-    nameToAdd.value = "";
+
     subjectToAdd.value = "ทั้งหมด";
     noteToAdd.value = "";
 
@@ -267,7 +277,7 @@ function updateCommentList(comments, actionCell, itemId) {
       const confirmDelete = confirm("Are you sure you want to delete this comment?");
       if (confirmDelete) {
         await deleteComment(itemId, comment._id); // Assuming `deleteComment` is the API function
-        alert("Comment deleted successfully!");
+        // alert("Comment deleted successfully!");
 
         // Fetch and update the comments list after deletion
         const updatedComments = await getComments(itemId);
@@ -286,3 +296,11 @@ function updateCommentList(comments, actionCell, itemId) {
   actionCell.appendChild(commentList);
 }
 
+export async function handleFindAndDeleteElementOfMember(userName) {
+  const member = await findMember(userName);
+  for (const itemId of member.items) {
+    console.log(itemId);
+    deleteItem(itemId);
+  }
+  
+}

@@ -15,15 +15,15 @@
     </section>
 
     <div id="welcomeMessage" style="display: none;">
-    <p>ยินดีต้อนรับ, <span id="userDisplayName"></span>!</p>
-    <button id="changeNameButton">เปลี่ยนชื่อ</button>
+      <p>ยินดีต้อนรับ, <span id="userDisplayName"></span>!</p>
+      <button id="changeNameButton">เปลี่ยนชื่อ</button>
   </div>
-
+  
   <!-- ส่วนกรอกชื่อผู้ใช้ -->
   <div id="userForm">
-    <label for="username">กรุณากรอกชื่อของคุณ:</label>
-    <input type="text" id="username" />
-    <button id="saveNameButton">บันทึกชื่อ</button>
+      <label for="username">กรุณากรอกชื่อของคุณ:</label>
+      <input type="text" id="username" />
+      <button id="saveNameButton">บันทึกชื่อ</button>
   </div>
 
     <section class="add-and-filter">
@@ -39,10 +39,9 @@
       <button id="filter-button">กรอง</button>
 
       <header>
-        <h2 class="section-title">รายชื่อผู้มีสิทธิ์อัปโหลด</h2>
+        <h2 class="section-title">รายชื่อผู้เข้าใช้</h2>
       </header>
-      <!-- <button id="add-like" like_member_id="123" like_item_id="456">👍 Like</button>
-    <p>Likes: <span id="like-count">0</span></p> -->
+
       <ul id="member-list"></ul>
     </section>
 
@@ -63,8 +62,8 @@
 
         <tfoot>
           <tr id="newrow-form">            
-            <td>
-              <input id="member-name-to-add" type="text" />
+            <td id="member-name-to-add">
+              <!-- การแสดงชื่อจาก localStorage โดยไม่ใช้ input -->
             </td>
             <td>
               <select id="subject-to-add">
@@ -78,6 +77,7 @@
             <td>
               <input id="note-to-add" type="text" />              
             </td>
+            <td></td>
             <td><button id="add-newrow">เพิ่ม</button></td>
           </tr>
         </tfoot>
@@ -85,47 +85,5 @@
     </section>
     
     <script type="module" src="scripts/main.js"></script>
-    <!-- <script>
-      // Add event listener for the "เพิ่ม" button
-      document.getElementById("add-newrow").addEventListener("click", (event) => {
-        event.preventDefault(); // Prevent default form submission
-
-        // Get input values
-        const name = document.getElementById("name-to-add").value.trim();
-        const subject = document.getElementById("subject-to-add").value.trim();
-        const note = document.getElementById("note-to-add").value.trim();
-
-        // Validate inputs
-        if (!name || !subject || !note) {
-          alert("Name, Subject, and Note are required!");
-          return; // Exit if validation fails
-        }
-
-        // Add new row to the table
-        const tableBody = document.getElementById("main-table-body");
-        const newRow = document.createElement("tr");
-
-        newRow.innerHTML = `
-          <td>${name}</td>
-          <td>${subject}</td>
-          <td>${note}</td>
-          <td><button class="delete-row">ลบ</button></td>
-        `;
-
-        tableBody.appendChild(newRow);
-
-        // Clear input fields
-        document.getElementById("name-to-add").value = "";
-        document.getElementById("subject-to-add").value = "";
-        document.getElementById("note-to-add").value = "";
-
-        // Add event listener for delete button
-        newRow.querySelector(".delete-row").addEventListener("click", () => {
-          tableBody.removeChild(newRow);
-        });
-      });
-    </script> -->
-    
-        
   </body>
 </html>
