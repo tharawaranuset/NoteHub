@@ -276,6 +276,52 @@ function updateCommentList(comments, actionCell, itemId) {
     // Display the comment text
     listItem.innerText = `${comment.author}: ${comment.text}`;
 
+    // Create Edit button
+    const editButton = document.createElement("button");
+    editButton.innerText = "Edit";
+    editButton.style.marginLeft = "10px"; // Add spacing
+    editButton.addEventListener("click", () => {
+      const userName = localStorage.getItem("userName");
+      if (userName === comment.author) {
+        // Replace comment text with input field
+        const editInput = document.createElement("input");
+        editInput.type = "text";
+        editInput.value = comment.text;
+        editInput.style.marginRight = "10px";
+
+        const saveButton = document.createElement("button");
+        saveButton.innerText = "Save";
+        saveButton.addEventListener("click", async () => {
+          const newCommentText = editInput.value.trim();
+          if (newCommentText) {
+            // Update the comment in the database
+            await addComments(itemId, newCommentText, comment.author); // Assuming `addComments` can update comments
+            await deleteComment(itemId,comment._id);
+            // Refresh comments
+            const updatedComments = await getComments(itemId);
+            updateCommentList(updatedComments, actionCell, itemId);
+          } else {
+            alert("Comment cannot be empty!");
+          }
+        });
+
+        const cancelButton = document.createElement("button");
+        cancelButton.innerText = "Cancel";
+        cancelButton.addEventListener("click", () => {
+          // Restore original comment text
+          updateCommentList(comments, actionCell, itemId);
+        });
+
+        // Clear list item and add editing elements
+        listItem.innerHTML = ""; // Clear the current content
+        listItem.appendChild(editInput);
+        listItem.appendChild(saveButton);
+        listItem.appendChild(cancelButton);
+      } else {
+        alert("You can only edit your own comments.");
+      }
+    });
+
     // Create a Delete button
     const deleteButton = document.createElement("button");
     deleteButton.innerText = "Delete";
@@ -299,6 +345,7 @@ function updateCommentList(comments, actionCell, itemId) {
     });
     
     // Append the Delete button to the list item
+    listItem.appendChild(editButton);
     listItem.appendChild(deleteButton);
 
     // Add the list item to the comment list
