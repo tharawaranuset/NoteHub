@@ -159,10 +159,12 @@ export async function handleLikeItem(itemId,likeButton) {
   clearFilter();
 }
 
-async function handleEditItem(itemId, item, noteCell) {
+export async function handleEditItem(itemId, item, noteCell) {
+  const userName = localStorage.getItem("userName");
+  if(userName===item.name){
   // ลบข้อความเดิมออกจาก noteCell
   noteCell.innerHTML = "";
-
+  
   // สร้าง input สำหรับแก้ไขข้อความ
   const input = document.createElement("input");
   input.type = "text";
@@ -188,6 +190,7 @@ async function handleEditItem(itemId, item, noteCell) {
     } else {
       alert("ข้อความไม่ควรว่างเปล่า!");
     }
+    
   });
 
   // สร้างปุ่มยกเลิก (ถ้าผู้ใช้ต้องการยกเลิกการแก้ไข)
@@ -202,6 +205,10 @@ async function handleEditItem(itemId, item, noteCell) {
   noteCell.appendChild(input);
   noteCell.appendChild(saveButton);
   noteCell.appendChild(cancelButton); // เพิ่มปุ่มยกเลิก
+}
+else{
+  alert("This one is not your");
+}
 }
 
 export async function handleCreateItem() {
@@ -274,6 +281,8 @@ function updateCommentList(comments, actionCell, itemId) {
     deleteButton.innerText = "Delete";
     deleteButton.style.marginLeft = "10px"; // Add spacing
     deleteButton.addEventListener("click", async () => {
+      const userName=localStorage.getItem("userName");
+      if(userName===comment.author){
       const confirmDelete = confirm("Are you sure you want to delete this comment?");
       if (confirmDelete) {
         await deleteComment(itemId, comment._id); // Assuming `deleteComment` is the API function
@@ -283,8 +292,12 @@ function updateCommentList(comments, actionCell, itemId) {
         const updatedComments = await getComments(itemId);
         updateCommentList(updatedComments, actionCell, itemId);
       }
+    }
+    else{
+      alert("This one is not your");
+    }
     });
-
+    
     // Append the Delete button to the list item
     listItem.appendChild(deleteButton);
 
