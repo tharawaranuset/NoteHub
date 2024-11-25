@@ -99,8 +99,8 @@ export async function updateMember(userName,id) {
 
     const data = await response.json();  // รับข้อมูลจากการตอบกลับ
 
-    // แสดงข้อมูลที่ได้รับจากเซิร์ฟเวอร์
-    console.log("Member updated:", data);
+    
+    
 
     return data;  // ส่งข้อมูลที่ได้รับกลับ (อาจเป็นข้อมูลของสมาชิกที่ได้รับการอัปเดต)
   } catch (err) {

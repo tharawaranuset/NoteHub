@@ -58,28 +58,30 @@
           </tr>
         </thead>
 
+        <tr id="newrow-form">            
+          <td id="member-name-to-add">
+            <!-- การแสดงชื่อจาก localStorage โดยไม่ใช้ input -->
+          </td>
+          <td>
+            <select id="subject-to-add">
+              <option value="ทั้งหมด">-- ทั้งหมด --</option>
+              <option value="Maths">Maths</option>
+              <option value="Science">Science</option>
+              <option value="English">English</option>
+              <option value="History">History</option>
+            </select>
+          </td>
+          <td>
+            <input id="note-to-add" type="text" />              
+          </td>
+          <td></td>
+          <td><button id="add-newrow">เพิ่ม</button></td>
+        </tr>
+        
         <tbody id="main-table-body"></tbody>
 
         <tfoot>
-          <tr id="newrow-form">            
-            <td id="member-name-to-add">
-              <!-- การแสดงชื่อจาก localStorage โดยไม่ใช้ input -->
-            </td>
-            <td>
-              <select id="subject-to-add">
-                <option value="ทั้งหมด">-- ทั้งหมด --</option>
-                <option value="Maths">Maths</option>
-                <option value="Science">Science</option>
-                <option value="English">English</option>
-                <option value="History">History</option>
-              </select>
-            </td>
-            <td>
-              <input id="note-to-add" type="text" />              
-            </td>
-            <td></td>
-            <td><button id="add-newrow">เพิ่ม</button></td>
-          </tr>
+          
         </tfoot>
       </table>
     </section>

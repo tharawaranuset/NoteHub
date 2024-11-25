@@ -73,13 +73,13 @@ export async function handleDeleteMember(userName) {
   // Refresh the member list and table
   await fetchAndDrawTable();
   await populateMembers();
+  location.reload();
 }
 
 export async function handleFindAndDeleteElementOfMember(userName) {
   const member = await findMember(userName);
   for (const itemId of member.items) {
-    console.log(itemId);
-    deleteItem(itemId);
+    await deleteItem(itemId);
   }
   
 }
