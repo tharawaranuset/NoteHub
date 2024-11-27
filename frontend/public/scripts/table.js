@@ -216,6 +216,7 @@ export async function handleCreateItem() {
 
   const subjectToAdd = document.getElementById("subject-to-add");
   const noteToAdd = document.getElementById("note-to-add");
+  const fileInput = document.getElementById("files");
   if(nameToAdd === "กรุณากรอกชื่อ"){
     alert("กรุณากรอกชื่อ");
     return;
@@ -226,11 +227,38 @@ export async function handleCreateItem() {
   }
   else {
     const payload = {
-      name: nameToAdd,
-      subject: subjectToAdd.value.trim(),
-      note: noteToAdd.value.trim(),
-      like: 0,
-    };
+            name: nameToAdd,
+            subject: subjectToAdd.value.trim(),
+            note: noteToAdd.value.trim(),
+            like: 0,
+          };
+    if(fileInput){
+      const file = fileInput.files[0];
+      
+      if (!file) {
+        alert("Please select a file.");
+        return;
+      }
+    
+      const formData = new FormData();
+      formData.append("file", file);
+    
+      try {
+        const response = await fetch(`${BACKEND_URL}/upload`, {
+          method: "POST",
+          body: formData,
+        });
+    
+        if (!response.ok) {
+          throw new Error(`Error: ${response.statusText}`);
+        }
+        const result = await response.text();
+        document.getElementById("result").innerText = result;
+      } catch (err) {
+        document.getElementById("result").innerText = `Upload failed: ${err.message}`;
+      }
+      
+    }
     const id = await createItem(payload);
     const userName=nameToAdd
     await updateMember(userName,id);
