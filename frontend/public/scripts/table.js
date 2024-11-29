@@ -22,7 +22,7 @@ function drawTable(items) {
 
     if (item.fileName) {
       const fileList = document.createElement("div");
-
+      fileList.id = `file-list${item.fileName}`;
       const downloadLink = document.createElement("a");
       downloadLink.href = `${BACKEND_URL}/file/download/${item._id}`;
       downloadLink.target = "_blank";
@@ -133,7 +133,7 @@ function drawTable(items) {
 
     const editButton = document.createElement("button");
     editButton.innerText = "แก้ไข";
-    editButton.addEventListener("click", () => handleEditItem(item._id, item,noteCell));
+    editButton.addEventListener("click", () => handleEditItem(item._id, item,noteCell,fileCell));
     actionCell.appendChild(editButton);
 
     actionCell.appendChild(deleteButton);
@@ -181,12 +181,28 @@ export async function handleLikeItem(itemId,likeButton) {
   clearFilter();
 }
 
-export async function handleEditItem(itemId, item, noteCell) {
+export async function handleEditItem(itemId, item, noteCell, fileCell) {
+  var container;
   const userName = localStorage.getItem("userName");
   if(userName===item.name){
   // ลบข้อความเดิมออกจาก noteCell
   noteCell.innerHTML = "";
-  
+  if(item.fileName){
+    const deleteButton = document.createElement("button");
+    deleteButton.id = "delete-edit";
+    deleteButton.addEventListener("click", () =>{
+      fileCell.removeChild(document.getElementById(`file-list${item.fileName}`));
+      deleteFile(itemId);
+      // Create container div
+      handleCreteFileBox(fileCell)
+      fileCell.removeChild(deleteButton);
+    });
+    deleteButton.innerText = "ลบ";
+    fileCell.appendChild(deleteButton);
+  }else{
+    fileCell.innerHTML = "";
+    handleCreteFileBox(fileCell)
+  }
   // สร้าง input สำหรับแก้ไขข้อความ
   const input = document.createElement("input");
   input.type = "text";
@@ -202,13 +218,54 @@ export async function handleEditItem(itemId, item, noteCell) {
   saveButton.innerText = "บันทึก";
   saveButton.addEventListener("click", async () => {
     const newNote = input.value; // รับค่าที่ผู้ใช้แก้ไข
+    var filename= "",filepath="";
+    const fileInput = document.getElementById("files-edit");
+    const fileContainer = document.getElementById(`container-edit`);
+    if(fileInput.files[0]){
+      const file = fileInput.files[0];;
+      const maxSize = 5 * 1024 * 1024; // 5MB
+      
+      if (!file) {
+        alert("Please select a file.");
+        return;
+      }
+      if (file.size > maxSize) {
+        alert('File too large. Max size is 5MB.');
+        fileInput.value = ""; // Clear the input
+        return;
+      }
+      const formData = new FormData();
+      formData.append("file", file);
+    
+      const {fileName, filePath} = await uploadFile(formData);
+      filename = fileName;
+      filepath = filePath;
+    }else{
+      filename = "";
+      filepath = "";
+    }
+    fileCell.removeChild(fileContainer);
     if (newNote.trim() !== "") {
       // เรียก API แก้ไขโน้ต
-      await editItem(itemId, newNote); 
+      await editItem(itemId, newNote, filename, filepath); 
       
       // อัปเดตข้อมูลในแถวและเซลล์
       item.note = newNote;
       noteCell.innerText = newNote; // แสดงข้อความที่แก้ไขแล้ว
+      if (item.fileName) {
+        const fileList = document.createElement("div");
+        fileList.id = `file-list${item.fileName}`;
+        const downloadLink = document.createElement("a");
+        downloadLink.href = `${BACKEND_URL}/file/download/${item._id}`;
+        downloadLink.target = "_blank";
+        downloadLink.textContent = item.fileName;
+  
+        fileList.appendChild(downloadLink);
+  
+        fileCell.appendChild(fileList);
+      } else {
+        fileCell.innerText = "No file"; // Indicate no file is available
+      }
     } else {
       alert("ข้อความไม่ควรว่างเปล่า!");
     }
@@ -220,7 +277,11 @@ export async function handleEditItem(itemId, item, noteCell) {
   cancelButton.innerText = "ยกเลิก";
   cancelButton.addEventListener("click", () => {
     // คืนค่าให้เป็นข้อความเดิม
+    const deletebutton = document.getElementById(`delete-edit`);
+    const fileContainer = document.getElementById(`container-edit`);
     noteCell.innerText = item.note;
+    if(fileContainer){fileCell.removeChild(fileContainer);}
+    if(deletebutton) {fileCell.removeChild(deletebutton);}
   });
 
   // เพิ่ม input, ปุ่มบันทึก และปุ่มยกเลิกใน noteCell
@@ -417,4 +478,28 @@ export async function handleFindAndDeleteElementOfMember(userName) {
     deleteItem(itemId);
   }
   
+}
+
+export async function handleCreteFileBox(fileCell){
+  const container = document.createElement('div');
+  container.classList.add('container');
+  container.id = 'container-edit';
+
+  // Create file input
+  const fileInput = document.createElement('input');
+  fileInput.type = 'file';
+  fileInput.id = 'files-edit';
+  fileInput.name = 'file';
+
+  // Create response div
+  const responseDiv = document.createElement('div');
+  responseDiv.id = 'response';
+  responseDiv.classList.add('response');
+
+  // Append file input and response div to container
+  container.appendChild(fileInput);
+  container.appendChild(responseDiv);
+
+  // Append container to the body (or any specific parent element)
+  fileCell.appendChild(container);
 }

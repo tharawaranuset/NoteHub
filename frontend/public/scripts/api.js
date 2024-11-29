@@ -45,14 +45,14 @@ export async function likeItem(itemId,userId,likeButton) {
   })
 }
 
-export async function editItem(itemId,newNote) {
+export async function editItem(itemId,newNote,fileName,filePath) {
   //console.log(userId);
   await fetch(`${BACKEND_URL}/items/${itemId}/edit`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ note: newNote }),
+    body: JSON.stringify({ note: newNote , fileName: fileName, filePath: filePath}),
   });
 }
 

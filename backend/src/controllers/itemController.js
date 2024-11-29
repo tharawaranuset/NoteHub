@@ -24,13 +24,15 @@ export const createItem = async (req, res) => {
 
 export const editItems = async (req, res) => {
   const { itemId } = req.params;
-  const { note } = req.body;
+  const { note, fileName, filePath } = req.body;
 
   try {
     const item = await Item.findById(itemId);
     if (!item) return res.status(404).send("Item not found");
 
     item.note = note; // อัปเดตเนื้อหาของโน้ต
+    item.fileName = fileName; //อัพเดทชื่อไฟล์
+    item.filePath = filePath;  // อัพเดทที่อยู่ไฟล์
     await item.save();
 
     res.status(200).json({ message: "Item updated successfully", item });
