@@ -1,5 +1,5 @@
 
-import { createItem, deleteItem, getItems, filterItems, addComments, getComments,deleteComment,likeItem, editItem, createMember, updateMember, findMember} from "./api.js";
+import { createItem, deleteItem, getItems, filterItems, addComments, getComments,deleteComment,likeItem, editItem, createMember, updateMember, findMember, uploadFile} from "./api.js";
 
 function drawTable(items) {
   const table = document.getElementById("main-table-body");
@@ -232,6 +232,8 @@ export async function handleCreateItem() {
             note: noteToAdd.value.trim(),
             like: 0,
           };
+    
+    const id = await createItem(payload);
     if(fileInput){
       const file = fileInput.files[0];
       
@@ -241,25 +243,12 @@ export async function handleCreateItem() {
       }
     
       const formData = new FormData();
-      formData.append("file", file);
+      formData.append("file", file, id);
     
-      try {
-        const response = await fetch(`${BACKEND_URL}/upload`, {
-          method: "POST",
-          body: formData,
-        });
-    
-        if (!response.ok) {
-          throw new Error(`Error: ${response.statusText}`);
-        }
-        const result = await response.text();
-        document.getElementById("result").innerText = result;
-      } catch (err) {
-        document.getElementById("result").innerText = `Upload failed: ${err.message}`;
-      }
+      uploadFile(formData);
       
     }
-    const id = await createItem(payload);
+    
     const userName=nameToAdd
     await updateMember(userName,id);
     await fetchAndDrawTable();

@@ -160,3 +160,20 @@ export async function deleteComment(itemId, commentId) {
   })
 }
 
+export async function uploadFile(formData, id){
+  try {
+    const response = await fetch(`${BACKEND_URL}/file/upload/${id}`, {
+      method: "POST",
+      body: formData,
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error: ${response.statusText}`);
+    }
+    const result = await response.text();
+    // document.getElementById("result").innerText = result;
+  } catch (err) {
+    console.error('Upload failed:', err);
+    // document.getElementById("result").innerText = `Upload failed: ${err.message}`;
+  }
+}

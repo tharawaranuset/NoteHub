@@ -6,6 +6,12 @@ const commentSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
+const fileSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  type: { type: String, required: true },
+  path: { type: String, required: true },
+});
+
 const itemSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -25,9 +31,7 @@ const itemSchema = new mongoose.Schema({
     required: true,
   },
   comments: [commentSchema], // Embed comments
-  files:{
-    type: String, 
-  }
+  files:[fileSchema], 
 });
 
 const Item = mongoose.model("Item", itemSchema);
