@@ -33,20 +33,27 @@ export const downloadFile = async (req, res) => {
 
 
 export const deleteFile = async (req, res) => {
-  const filename = req.params.filename; // Get filename from URL
-  const filePath = path.join("./res/uploads/", filename); // Construct file path
+  const { id } = req.params;
+
+  try {
+    const item = await Item.findById(id);
+    if (!item) return res.status(404).send("Item not found");
+  
+    const fileName = item.fileName;
+    const filePath = path.resolve( '..', 'backend', 'res', 'uploads', fileName);
 
   // Check if the file exists and delete it
-  fs.access(filePath, fs.constants.F_OK, (err) => {
-      if (err) {
-          return res.status(404).send("File not found.");
-      }
-      fs.unlink(filePath, (err) => {
-          if (err) {
-              console.error("Error deleting file:", err);
-              return res.status(500).send("Error deleting the file.");
-          }
-          res.send(`File ${filename} deleted successfully.`);
-      });
-  });
+  try {
+    await fs.access(filePath); // Ensure the file exists
+    await fs.unlink(filePath); // Delete the file
+    res.send(`File ${fileName} deleted successfully.`);
+  } catch (err) {
+    console.error("Error deleting file:", err.message);
+    return res.status(404).send("File not found or already deleted.");
+  }
+  } catch (err) {
+    console.error("Error in deleteFile:", err.message);
+    res.status(500).send("Internal server error.");
+  }
+
 }

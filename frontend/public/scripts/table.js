@@ -1,6 +1,6 @@
 import { BACKEND_URL } from "./config.js";
 
-import { createItem, deleteItem, getItems, filterItems, addComments, getComments,deleteComment,likeItem, editItem, createMember, updateMember, findMember, uploadFile} from "./api.js";
+import { createItem, deleteItem, getItems, filterItems, addComments, getComments,deleteComment,likeItem, editItem, createMember, updateMember, findMember, uploadFile, deleteFile} from "./api.js";
 
 function drawTable(items) {
   const table = document.getElementById("main-table-body");
@@ -22,24 +22,12 @@ function drawTable(items) {
 
     if (item.fileName) {
       const fileList = document.createElement("div");
-      // Clear the responseDiv first
-      // responseDiv.innerHTML = "";
-
-      // Create elements
-      // const fileName = document.createElement("p");
-      // fileName.textContent = data.message;
-
-      // const fileIdParagraph = document.createElement("p");
-      // fileIdParagraph.textContent = `File ID: ${data.fileId}`;
 
       const downloadLink = document.createElement("a");
       downloadLink.href = `${BACKEND_URL}/file/download/${item._id}`;
       downloadLink.target = "_blank";
       downloadLink.textContent = item.fileName;
 
-      // Append elements to the responseDiv
-      // fileList.appendChild(messageParagraph);
-      // fileList.appendChild(fileIdParagraph);
       fileList.appendChild(downloadLink);
 
       fileCell.appendChild(fileList);
@@ -49,7 +37,7 @@ function drawTable(items) {
 
     // Create Delete button
     const deleteButton = document.createElement("button");
-    deleteButton.addEventListener("click", () => handleDeleteItem(item._id,item.name));
+    deleteButton.addEventListener("click", () => handleDeleteItem(item._id,item.name,item.fileName));
     deleteButton.innerText = "ลบ";
 
     // Create Comment button
@@ -163,8 +151,11 @@ export async function fetchAndDrawTable() {
   drawTable(items);
 }
 
-export async function handleDeleteItem(id,name) {
+export async function handleDeleteItem(id,name,fileName) {
   if(name===localStorage.getItem("userName")){
+    if(fileName){
+      await deleteFile(id);
+    }
     await deleteItem(id);
     await fetchAndDrawTable();
     clearFilter();
@@ -248,6 +239,7 @@ export async function handleCreateItem() {
   const subjectToAdd = document.getElementById("subject-to-add");
   const noteToAdd = document.getElementById("note-to-add");
   const fileInput = document.getElementById("files");
+
   if(nameToAdd === "กรุณากรอกชื่อ"){
     alert("กรุณากรอกชื่อ");
     return;
@@ -267,12 +259,17 @@ export async function handleCreateItem() {
     
     if(fileInput){
       const file = fileInput.files[0];
+      const maxSize = 5 * 1024 * 1024; // 5MB
       
       if (!file) {
         alert("Please select a file.");
         return;
       }
-    
+      if (file.size > maxSize) {
+        alert('File too large. Max size is 5MB.');
+        fileInput.value = ""; // Clear the input
+        return;
+      }
       const formData = new FormData();
       formData.append("file", file);
     

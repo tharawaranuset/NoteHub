@@ -185,3 +185,8 @@ export async function uploadFile(formData){
     // document.getElementById("result").innerText = `Upload failed: ${err.message}`;
   }
 }
+export async function deleteFile(id){
+  await fetch(`${BACKEND_URL}/file/delete/${id}`, {
+      method: "DELETE",
+    }) 
+}
