@@ -243,9 +243,9 @@ export async function handleCreateItem() {
       }
     
       const formData = new FormData();
-      formData.append("file", file, id);
+      formData.append("file", file);
     
-      uploadFile(formData);
+      uploadFile(formData,id);
       
     }
     

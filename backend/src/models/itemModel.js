@@ -31,7 +31,7 @@ const itemSchema = new mongoose.Schema({
     required: true,
   },
   comments: [commentSchema], // Embed comments
-  files:[fileSchema], 
+  file: fileSchema, 
 });
 
 const Item = mongoose.model("Item", itemSchema);
