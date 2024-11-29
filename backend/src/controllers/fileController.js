@@ -1,31 +1,40 @@
 import Item from "../models/itemModel.js";
 import path from "path";
-import fs from "fs";
+import fs from 'fs/promises'; // Ensure fs.promises is used for async operations
+
 
 export const downloadFile = async (req, res) => {
-    const filename = req.params.filename; // Get filename from URL
-    const filePath = path.join("./res/uploads/", filename); // Construct file path
+    const { id } = req.params;
 
-    // Check if the file exists
-    fs.access(filePath, fs.constants.F_OK, (err) => {
-        if (err) {
-            return res.status(404).send("File not found.");
-        }
-        res.download(filePath, filename, (err) => {
-            if (err) {
-                console.error("Error during file download:", err);
-                res.status(500).send("Error downloading the file.");
-            }
-        });
-    });
-    res.status(200).json(filename);
+    try {
+      const item = await Item.findById(id);
+      if (!item) return res.status(404).send("Item not found");
+    
+      const fileName = item.fileName;
+      const filePath = path.resolve( '..', 'backend', 'res', 'uploads', fileName);
+      console.log(filePath);
+      await fs.access(filePath);
+      
+      // If the file exists, send it
+      res.download(filePath, fileName, (err) => {
+          if (err) {
+              console.error("Error during file download:", err);
+              if (!res.headersSent) {
+                  res.status(500).send("Error downloading the file.");
+              }
+          }
+      });
+    } catch (err) {
+        console.error("File not found:", err);
+        res.status(404).send("File not found.");
+    }
 
 }
 
 
 export const deleteFile = async (req, res) => {
   const filename = req.params.filename; // Get filename from URL
-  const filePath = path.join(__dirname, "./res/uploads/", filename); // Construct file path
+  const filePath = path.join("./res/uploads/", filename); // Construct file path
 
   // Check if the file exists and delete it
   fs.access(filePath, fs.constants.F_OK, (err) => {

@@ -6,12 +6,6 @@ const commentSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
-const fileSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  type: { type: String, required: true },
-  path: { type: String, required: true },
-});
-
 const itemSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -30,8 +24,17 @@ const itemSchema = new mongoose.Schema({
     default: [],
     required: true,
   },
+  fileName:{
+    type: String,  // ชือไฟล์
+    default: null,  // ค่าเริ่มต้นเป็น null
+    required: false,  // ไม่จำเป็นต้องใส่
+  },
+  filePath:{
+    type: String,  // ที่อยู่ของไฟล์
+    default: null,  // ค่าเริ่มต้นเป็น null
+    required: false,  // ไม่จำเป็นต้องใส่
+  },
   comments: [commentSchema], // Embed comments
-  file: fileSchema, 
 });
 
 const Item = mongoose.model("Item", itemSchema);

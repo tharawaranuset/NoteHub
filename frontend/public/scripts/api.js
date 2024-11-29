@@ -160,17 +160,25 @@ export async function deleteComment(itemId, commentId) {
   })
 }
 
-export async function uploadFile(formData, id){
+export async function uploadFile(formData){
+  var fileName,filePath;
   try {
-    const response = await fetch(`${BACKEND_URL}/file/upload/${id}`, {
+    const response = await fetch(`${BACKEND_URL}/file/upload`, {
       method: "POST",
       body: formData,
-    });
+    }) .then((response) => response.json())
+    .then((data) => {
+        console.log(data.message); // Logs: File uploaded successfully!
+        console.log("Uploaded File Name:", data.fileName);
+        fileName = data.fileName;
+        filePath = data.filePath;
+    })
+    .catch((error) => console.error("Error:", error));
 
-    if (!response.ok) {
-      throw new Error(`Error: ${response.statusText}`);
-    }
-    const result = await response.text();
+    // if (!response.ok) {
+    //   throw new Error(`Error: ${response.statusText}`);
+    // }
+    return {fileName : fileName, filePath : filePath};
     // document.getElementById("result").innerText = result;
   } catch (err) {
     console.error('Upload failed:', err);

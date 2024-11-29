@@ -1,3 +1,4 @@
+import { BACKEND_URL } from "./config.js";
 
 import { createItem, deleteItem, getItems, filterItems, addComments, getComments,deleteComment,likeItem, editItem, createMember, updateMember, findMember, uploadFile} from "./api.js";
 
@@ -12,9 +13,39 @@ function drawTable(items) {
     row.insertCell().innerText = item.subject;
     const noteCell = row.insertCell();
     noteCell.innerText = item.note; // เพิ่มโน้ต
+
+    const fileCell = row.insertCell();
+
     row.insertCell().innerText = item.likes.length;
     
     const actionCell = row.insertCell();
+
+    if (item.fileName) {
+      const fileList = document.createElement("div");
+      // Clear the responseDiv first
+      // responseDiv.innerHTML = "";
+
+      // Create elements
+      // const fileName = document.createElement("p");
+      // fileName.textContent = data.message;
+
+      // const fileIdParagraph = document.createElement("p");
+      // fileIdParagraph.textContent = `File ID: ${data.fileId}`;
+
+      const downloadLink = document.createElement("a");
+      downloadLink.href = `${BACKEND_URL}/file/download/${item._id}`;
+      downloadLink.target = "_blank";
+      downloadLink.textContent = item.fileName;
+
+      // Append elements to the responseDiv
+      // fileList.appendChild(messageParagraph);
+      // fileList.appendChild(fileIdParagraph);
+      fileList.appendChild(downloadLink);
+
+      fileCell.appendChild(fileList);
+    } else {
+      fileCell.innerText = "No file"; // Indicate no file is available
+    }
 
     // Create Delete button
     const deleteButton = document.createElement("button");
@@ -226,14 +257,14 @@ export async function handleCreateItem() {
     return; // Exit if validation fails
   }
   else {
-    const payload = {
+    var payload = {
             name: nameToAdd,
             subject: subjectToAdd.value.trim(),
             note: noteToAdd.value.trim(),
             like: 0,
           };
     
-    const id = await createItem(payload);
+    
     if(fileInput){
       const file = fileInput.files[0];
       
@@ -245,10 +276,19 @@ export async function handleCreateItem() {
       const formData = new FormData();
       formData.append("file", file);
     
-      uploadFile(formData,id);
-      
+      const {fileName, filePath} = await uploadFile(formData);
+      console.log(fileName);
+      // console.log(filename.filename);
+      payload = {
+        name: nameToAdd,
+        subject: subjectToAdd.value.trim(),
+        note: noteToAdd.value.trim(),
+        like: 0,
+        fileName : fileName,
+        filePath : filePath,
+      };
     }
-    
+    const id = await createItem(payload);
     const userName=nameToAdd
     await updateMember(userName,id);
     await fetchAndDrawTable();
@@ -256,7 +296,7 @@ export async function handleCreateItem() {
 
     subjectToAdd.value = "ทั้งหมด";
     noteToAdd.value = "";
-
+    fileInput.value = "";
     clearFilter();
   }
 }
