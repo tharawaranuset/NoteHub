@@ -77,16 +77,7 @@ function drawTable(items) {
     const actionCell = row.insertCell();
 
     if (item.fileName) {
-      const fileList = document.createElement("div");
-      fileList.id = `file-list${item.fileName}`;
-      const downloadLink = document.createElement("a");
-      downloadLink.href = `${BACKEND_URL}/file/download/${item._id}`;
-      downloadLink.target = "_blank";
-      downloadLink.textContent = item.fileName;
-
-      fileList.appendChild(downloadLink);
-
-      fileCell.appendChild(fileList);
+      display_file(item.fileName, item._id, fileCell);
     } else {
       fileCell.innerText = "No file"; // Indicate no file is available
     }
@@ -125,50 +116,7 @@ function drawTable(items) {
     const newrow = table.insertRow();
     commentButton.addEventListener("click", (e) => {
       e.target.disabled = true;
-      let textArea = document.createElement("textarea");
-      const postCommentButton = document.createElement("button");
-      textArea.id = "comment-section";
-      postCommentButton.innerText = "Post";
-      postCommentButton.id = "post-comment-button";
-      //post
-      postCommentButton.addEventListener("click", async () => {
-        const commentText = textArea.value.trim();
-        if (!commentText) {
-          alert("Comment cannot be empty!");
-          return;
-        }
-        const author = localStorage.getItem("userName");
-        // Post the comment to the server
-        await addComments(item._id, commentText, author);
-
-        // Clear the text area and UI elements for comment input
-        e.target.disabled = false;
-        actionCell.removeChild(postCommentButton);
-        actionCell.removeChild(textArea);
-        actionCell.removeChild(cancelButton);
-
-        // alert("Comment posted successfully!");
-
-        // Fetch and display the updated comments list dynamically
-        const comments = await getComments(item._id);
-        updateCommentList(comments, newrow, item._id);
-      });
-
-      const cancelButton = document.createElement("button");
-      cancelButton.innerText = "❌";
-      cancelButton.addEventListener("click", () => {
-        e.target.disabled = false;
-        actionCell.removeChild(postCommentButton);
-        actionCell.removeChild(textArea);
-        actionCell.removeChild(cancelButton);
-      });
-
-      textArea.setAttribute("cols", "50");
-      textArea.setAttribute("rows", "5");
-      textArea.setAttribute("placeholder", "Enter your message here");
-      actionCell.appendChild(textArea);
-      actionCell.appendChild(postCommentButton);
-      actionCell.appendChild(cancelButton);
+      handleCreateComment(actionCell);
     });
 
     viewCommentButton.addEventListener("click", async () => {
@@ -282,7 +230,8 @@ export async function handleEditItem(itemId, item, noteCell, fileCell) {
         filepath = "";
       const fileInput = document.getElementById("files-edit");
       const fileContainer = document.getElementById(`container-edit`);
-      if (fileInput.files[0]) {
+      if (item.fileName=="" && fileInput.files[0]) {
+        fileCell.removeChild(fileContainer);
         const file = fileInput.files[0];
         const maxSize = 5 * 1024 * 1024; // 5MB
 
@@ -301,34 +250,28 @@ export async function handleEditItem(itemId, item, noteCell, fileCell) {
         const { fileName, filePath } = await uploadFile(formData);
         filename = fileName;
         filepath = filePath;
+
       } else {
-        filename = "";
-        filepath = "";
+        filename = item.fileName;
+        filepath = item.filePath;
       }
-      fileCell.removeChild(fileContainer);
+      
+      const deleteButton = document.getElementById("delete-edit");
       if (newNote.trim() !== "") {
-        // เรียก API แก้ไขโน้ต
+      // เรียก API แก้ไขโน้ต
         await editItem(itemId, newNote, filename, filepath);
 
         // อัปเดตข้อมูลในแถวและเซลล์
         item.note = newNote;
         noteCell.innerText = newNote; // แสดงข้อความที่แก้ไขแล้ว
-        if (item.fileName) {
-          const fileList = document.createElement("div");
-          fileList.id = `file-list${item.fileName}`;
-          const downloadLink = document.createElement("a");
-          downloadLink.href = `${BACKEND_URL}/file/download/${item._id}`;
-          downloadLink.target = "_blank";
-          downloadLink.textContent = item.fileName;
-
-          fileList.appendChild(downloadLink);
-
-          fileCell.appendChild(fileList);
-        } else {
-          fileCell.innerText = "No file"; // Indicate no file is available
-        }
+        
       } else {
         alert("ข้อความไม่ควรว่างเปล่า!");
+      }
+      if (!fileCell.hasChildNodes()) {
+        display_file(filename, item._id, fileCell);
+      } else{
+        fileCell.removeChild(deleteButton)
       }
     });
 
@@ -457,9 +400,6 @@ function updateCommentList(comments, actionCell, itemId) {
 
   comments.forEach((comment) => {
     const listItem = document.createElement("li");
-    // console.log("Item ID:", itemId);
-    // console.log("Comment ID:", comment._id);
-    // Display the comment text
     listItem.innerText = `${comment.author}: ${comment.text}`;
 
     // Create Edit button
@@ -551,6 +491,55 @@ export async function handleFindAndDeleteElementOfMember(userName) {
   }
 }
 
+export async function handleCreateComment(actionCell){
+  
+  let textArea = document.createElement("textarea");
+  const postCommentButton = document.createElement("button");
+  textArea.id = "comment-section";
+  postCommentButton.innerText = "Post";
+  postCommentButton.id = "post-comment-button";
+  //post
+  postCommentButton.addEventListener("click", async () => {
+    const commentText = textArea.value.trim();
+    if (!commentText) {
+      alert("Comment cannot be empty!");
+      return;
+    }
+    const author = localStorage.getItem("userName");
+    // Post the comment to the server
+    await addComments(item._id, commentText, author);
+
+    // Clear the text area and UI elements for comment input
+    e.target.disabled = false;
+    actionCell.removeChild(postCommentButton);
+    actionCell.removeChild(textArea);
+    actionCell.removeChild(cancelButton);
+
+    // alert("Comment posted successfully!");
+
+    // Fetch and display the updated comments list dynamically
+    const comments = await getComments(item._id);
+    updateCommentList(comments, newrow, item._id);
+  });
+
+  const cancelButton = document.createElement("button");
+  cancelButton.innerText = "❌";
+  cancelButton.addEventListener("click", () => {
+    e.target.disabled = false;
+    actionCell.removeChild(postCommentButton);
+    actionCell.removeChild(textArea);
+    actionCell.removeChild(cancelButton);
+  });
+
+  textArea.setAttribute("cols", "50");
+  textArea.setAttribute("rows", "5");
+  textArea.setAttribute("placeholder", "Enter your message here");
+  actionCell.appendChild(textArea);
+  actionCell.appendChild(postCommentButton);
+  actionCell.appendChild(cancelButton);
+}
+
+
 export async function handleCreteFileBox(fileCell) {
   const container = document.createElement("div");
   container.classList.add("container");
@@ -573,4 +562,18 @@ export async function handleCreteFileBox(fileCell) {
 
   // Append container to the body (or any specific parent element)
   fileCell.appendChild(container);
+}
+
+
+export async function display_file(fileName, id, fileCell){
+  const fileList = document.createElement("div");
+  fileList.id = `file-list${fileName}`;
+  const downloadLink = document.createElement("a");
+  downloadLink.href = `${BACKEND_URL}/file/download/${id}`;
+  downloadLink.target = "_blank";
+  downloadLink.textContent = fileName;
+
+  fileList.appendChild(downloadLink);
+
+  fileCell.appendChild(fileList);
 }
