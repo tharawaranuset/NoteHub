@@ -318,7 +318,7 @@ export async function handleCreateItem() {
           };
     
     
-    if(fileInput){
+    if(fileInput.files[0]){
       const file = fileInput.files[0];
       const maxSize = 5 * 1024 * 1024; // 5MB
       
