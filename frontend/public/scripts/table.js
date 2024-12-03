@@ -1,5 +1,6 @@
+import { BACKEND_URL } from "./config.js";
 
-import { createItem, deleteItem, getItems, filterItems, addComments, getComments,deleteComment,likeItem, editItem, createMember, updateMember, findMember} from "./api.js";
+import { createItem, deleteItem, getItems, filterItems, addComments, getComments,deleteComment,likeItem, editItem, createMember, updateMember, findMember, uploadFile, deleteFile} from "./api.js";
 
 function drawTable(items) {
   const table = document.getElementById("main-table-body");
@@ -12,13 +13,31 @@ function drawTable(items) {
     row.insertCell().innerText = item.subject;
     const noteCell = row.insertCell();
     noteCell.innerText = item.note; // เพิ่มโน้ต
+
+    const fileCell = row.insertCell();
+
     row.insertCell().innerText = item.likes.length;
     
     const actionCell = row.insertCell();
 
+    if (item.fileName) {
+      const fileList = document.createElement("div");
+      fileList.id = `file-list${item.fileName}`;
+      const downloadLink = document.createElement("a");
+      downloadLink.href = `${BACKEND_URL}/file/download/${item._id}`;
+      downloadLink.target = "_blank";
+      downloadLink.textContent = item.fileName;
+
+      fileList.appendChild(downloadLink);
+
+      fileCell.appendChild(fileList);
+    } else {
+      fileCell.innerText = "No file"; // Indicate no file is available
+    }
+
     // Create Delete button
     const deleteButton = document.createElement("button");
-    deleteButton.addEventListener("click", () => handleDeleteItem(item._id,item.name));
+    deleteButton.addEventListener("click", () => handleDeleteItem(item._id,item.name,item.fileName));
     deleteButton.innerText = "ลบ";
 
     // Create Comment button
@@ -114,7 +133,7 @@ function drawTable(items) {
 
     const editButton = document.createElement("button");
     editButton.innerText = "แก้ไข";
-    editButton.addEventListener("click", () => handleEditItem(item._id, item,noteCell));
+    editButton.addEventListener("click", () => handleEditItem(item._id, item,noteCell,fileCell));
     actionCell.appendChild(editButton);
 
     actionCell.appendChild(deleteButton);
@@ -132,8 +151,11 @@ export async function fetchAndDrawTable() {
   drawTable(items);
 }
 
-export async function handleDeleteItem(id,name) {
+export async function handleDeleteItem(id,name,fileName) {
   if(name===localStorage.getItem("userName")){
+    if(fileName){
+      await deleteFile(id);
+    }
     await deleteItem(id);
     await fetchAndDrawTable();
     clearFilter();
@@ -159,12 +181,28 @@ export async function handleLikeItem(itemId,likeButton) {
   clearFilter();
 }
 
-export async function handleEditItem(itemId, item, noteCell) {
+export async function handleEditItem(itemId, item, noteCell, fileCell) {
+  var container;
   const userName = localStorage.getItem("userName");
   if(userName===item.name){
   // ลบข้อความเดิมออกจาก noteCell
   noteCell.innerHTML = "";
-  
+  if(item.fileName){
+    const deleteButton = document.createElement("button");
+    deleteButton.id = "delete-edit";
+    deleteButton.addEventListener("click", () =>{
+      fileCell.removeChild(document.getElementById(`file-list${item.fileName}`));
+      deleteFile(itemId);
+      // Create container div
+      handleCreteFileBox(fileCell)
+      fileCell.removeChild(deleteButton);
+    });
+    deleteButton.innerText = "ลบ";
+    fileCell.appendChild(deleteButton);
+  }else{
+    fileCell.innerHTML = "";
+    handleCreteFileBox(fileCell)
+  }
   // สร้าง input สำหรับแก้ไขข้อความ
   const input = document.createElement("input");
   input.type = "text";
@@ -180,13 +218,54 @@ export async function handleEditItem(itemId, item, noteCell) {
   saveButton.innerText = "บันทึก";
   saveButton.addEventListener("click", async () => {
     const newNote = input.value; // รับค่าที่ผู้ใช้แก้ไข
+    var filename= "",filepath="";
+    const fileInput = document.getElementById("files-edit");
+    const fileContainer = document.getElementById(`container-edit`);
+    if(fileInput.files[0]){
+      const file = fileInput.files[0];;
+      const maxSize = 5 * 1024 * 1024; // 5MB
+      
+      if (!file) {
+        alert("Please select a file.");
+        return;
+      }
+      if (file.size > maxSize) {
+        alert('File too large. Max size is 5MB.');
+        fileInput.value = ""; // Clear the input
+        return;
+      }
+      const formData = new FormData();
+      formData.append("file", file);
+    
+      const {fileName, filePath} = await uploadFile(formData);
+      filename = fileName;
+      filepath = filePath;
+    }else{
+      filename = "";
+      filepath = "";
+    }
+    fileCell.removeChild(fileContainer);
     if (newNote.trim() !== "") {
       // เรียก API แก้ไขโน้ต
-      await editItem(itemId, newNote); 
+      await editItem(itemId, newNote, filename, filepath); 
       
       // อัปเดตข้อมูลในแถวและเซลล์
       item.note = newNote;
       noteCell.innerText = newNote; // แสดงข้อความที่แก้ไขแล้ว
+      if (item.fileName) {
+        const fileList = document.createElement("div");
+        fileList.id = `file-list${item.fileName}`;
+        const downloadLink = document.createElement("a");
+        downloadLink.href = `${BACKEND_URL}/file/download/${item._id}`;
+        downloadLink.target = "_blank";
+        downloadLink.textContent = item.fileName;
+  
+        fileList.appendChild(downloadLink);
+  
+        fileCell.appendChild(fileList);
+      } else {
+        fileCell.innerText = "No file"; // Indicate no file is available
+      }
     } else {
       alert("ข้อความไม่ควรว่างเปล่า!");
     }
@@ -198,7 +277,11 @@ export async function handleEditItem(itemId, item, noteCell) {
   cancelButton.innerText = "ยกเลิก";
   cancelButton.addEventListener("click", () => {
     // คืนค่าให้เป็นข้อความเดิม
+    const deletebutton = document.getElementById(`delete-edit`);
+    const fileContainer = document.getElementById(`container-edit`);
     noteCell.innerText = item.note;
+    if(fileContainer){fileCell.removeChild(fileContainer);}
+    if(deletebutton) {fileCell.removeChild(deletebutton);}
   });
 
   // เพิ่ม input, ปุ่มบันทึก และปุ่มยกเลิกใน noteCell
@@ -216,6 +299,8 @@ export async function handleCreateItem() {
 
   const subjectToAdd = document.getElementById("subject-to-add");
   const noteToAdd = document.getElementById("note-to-add");
+  const fileInput = document.getElementById("files");
+
   if(nameToAdd === "กรุณากรอกชื่อ"){
     alert("กรุณากรอกชื่อ");
     return;
@@ -225,12 +310,42 @@ export async function handleCreateItem() {
     return; // Exit if validation fails
   }
   else {
-    const payload = {
-      name: nameToAdd,
-      subject: subjectToAdd.value.trim(),
-      note: noteToAdd.value.trim(),
-      like: 0,
-    };
+    var payload = {
+            name: nameToAdd,
+            subject: subjectToAdd.value.trim(),
+            note: noteToAdd.value.trim(),
+            like: 0,
+          };
+    
+    
+    if(fileInput){
+      const file = fileInput.files[0];
+      const maxSize = 5 * 1024 * 1024; // 5MB
+      
+      if (!file) {
+        alert("Please select a file.");
+        return;
+      }
+      if (file.size > maxSize) {
+        alert('File too large. Max size is 5MB.');
+        fileInput.value = ""; // Clear the input
+        return;
+      }
+      const formData = new FormData();
+      formData.append("file", file);
+    
+      const {fileName, filePath} = await uploadFile(formData);
+      console.log(fileName);
+      // console.log(filename.filename);
+      payload = {
+        name: nameToAdd,
+        subject: subjectToAdd.value.trim(),
+        note: noteToAdd.value.trim(),
+        like: 0,
+        fileName : fileName,
+        filePath : filePath,
+      };
+    }
     const id = await createItem(payload);
     const userName=nameToAdd
     await updateMember(userName,id);
@@ -239,7 +354,7 @@ export async function handleCreateItem() {
 
     subjectToAdd.value = "ทั้งหมด";
     noteToAdd.value = "";
-
+    fileInput.value = "";
     clearFilter();
   }
 }
@@ -363,4 +478,28 @@ export async function handleFindAndDeleteElementOfMember(userName) {
     deleteItem(itemId);
   }
   
+}
+
+export async function handleCreteFileBox(fileCell){
+  const container = document.createElement('div');
+  container.classList.add('container');
+  container.id = 'container-edit';
+
+  // Create file input
+  const fileInput = document.createElement('input');
+  fileInput.type = 'file';
+  fileInput.id = 'files-edit';
+  fileInput.name = 'file';
+
+  // Create response div
+  const responseDiv = document.createElement('div');
+  responseDiv.id = 'response';
+  responseDiv.classList.add('response');
+
+  // Append file input and response div to container
+  container.appendChild(fileInput);
+  container.appendChild(responseDiv);
+
+  // Append container to the body (or any specific parent element)
+  fileCell.appendChild(container);
 }

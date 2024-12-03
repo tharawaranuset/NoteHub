@@ -19,14 +19,20 @@ const itemSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  imageUrl: {
-    type: String, // URL or path to the uploaded image
-    required: false,
-  },
   likes:{
     type: [String], // อาร์เรย์ของ userId ที่ไลค์
     default: [],
     required: true,
+  },
+  fileName:{
+    type: String,  // ชือไฟล์
+    default: null,  // ค่าเริ่มต้นเป็น null
+    required: false,  // ไม่จำเป็นต้องใส่
+  },
+  filePath:{
+    type: String,  // ที่อยู่ของไฟล์
+    default: null,  // ค่าเริ่มต้นเป็น null
+    required: false,  // ไม่จำเป็นต้องใส่
   },
   comments: [commentSchema], // Embed comments
 });

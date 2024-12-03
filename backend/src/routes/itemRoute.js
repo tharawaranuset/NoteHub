@@ -3,6 +3,7 @@ import express from "express";
 import * as itemController from "../controllers/itemController.js";
 import * as commentController from "../controllers/commentController.js";
 import * as memberController from "../controllers/memberController.js";
+import upload from "../middleware/fileUploadMiddleware.js" 
 
 const router = express.Router();
 

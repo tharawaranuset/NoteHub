@@ -45,14 +45,14 @@ export async function likeItem(itemId,userId,likeButton) {
   })
 }
 
-export async function editItem(itemId,newNote) {
+export async function editItem(itemId,newNote,fileName,filePath) {
   //console.log(userId);
   await fetch(`${BACKEND_URL}/items/${itemId}/edit`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ note: newNote }),
+    body: JSON.stringify({ note: newNote , fileName: fileName, filePath: filePath}),
   });
 }
 
@@ -160,3 +160,33 @@ export async function deleteComment(itemId, commentId) {
   })
 }
 
+export async function uploadFile(formData){
+  var fileName,filePath;
+  try {
+    const response = await fetch(`${BACKEND_URL}/file/upload`, {
+      method: "POST",
+      body: formData,
+    }) .then((response) => response.json())
+    .then((data) => {
+        console.log(data.message); // Logs: File uploaded successfully!
+        console.log("Uploaded File Name:", data.fileName);
+        fileName = data.fileName;
+        filePath = data.filePath;
+    })
+    .catch((error) => console.error("Error:", error));
+
+    // if (!response.ok) {
+    //   throw new Error(`Error: ${response.statusText}`);
+    // }
+    return {fileName : fileName, filePath : filePath};
+    // document.getElementById("result").innerText = result;
+  } catch (err) {
+    console.error('Upload failed:', err);
+    // document.getElementById("result").innerText = `Upload failed: ${err.message}`;
+  }
+}
+export async function deleteFile(id){
+  await fetch(`${BACKEND_URL}/file/delete/${id}`, {
+      method: "DELETE",
+    }) 
+}
