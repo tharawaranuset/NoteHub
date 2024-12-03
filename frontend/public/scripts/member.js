@@ -7,10 +7,10 @@ import { fetchAndDrawTable } from "./table.js";
 export async function populateMembers() {
   const memberList = document.getElementById("member-list");
   const filterSelect = document.getElementById("filter-name");
-
+  const filterSelectEditor = document.getElementById("filter-name-editor");
   memberList.innerHTML = "";
   filterSelect.innerHTML = '<option value="ทั้งหมด">-- ทั้งหมด --</option>';
-
+  filterSelectEditor.innerHTML = '<option value="ทั้งหมด">-- ทั้งหมด --</option>';
   // Fetch all members from the backend
   const members = await getMembers();
 
@@ -33,6 +33,7 @@ export async function populateMembers() {
     const option = document.createElement("option");
     option.value = option.textContent = member.name;
     filterSelect.appendChild(option);
+    filterSelectEditor.appendChild(option);
   });
 }
 export async function handleCreateNewMember() {

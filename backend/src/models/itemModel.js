@@ -11,6 +11,11 @@ const itemSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  editor:{
+    type: [String],
+    default: [],
+    required:false
+  },
   subject: {
     type: String,
     required: true,

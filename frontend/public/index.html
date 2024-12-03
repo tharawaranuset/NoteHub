@@ -29,6 +29,7 @@
     <section class="add-and-filter">
       <h2 class="section-title">ตัวกรองโน้ต</h2>
       <select id="filter-name"></select>
+      
       <select id="filter-subject">
         <option value="ทั้งหมด">-- ทั้งหมด --</option>
         <option value="Maths">Maths</option>
@@ -54,6 +55,7 @@
             <th>วิชา</th>
             <th>เนื้อหา</th>
             <th>ไฟล์ (รับไฟล์ได้ไม่เกิน 5 mb)</th>
+            <th>co-editor</th>
             <th>ไลค์</th>
             <th>ดำเนินการ</th>
           </tr>
@@ -80,6 +82,9 @@
               <input type="file" id="files" name="file">
               <div id="response" class="response"></div>
             </div>
+          </td>
+          <td>
+          <select id="filter-name-editor"></select>
           </td>
           <td></td>
           <td><button id="add-newrow">เพิ่ม</button></td>

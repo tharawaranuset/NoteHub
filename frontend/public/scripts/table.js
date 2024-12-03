@@ -15,7 +15,7 @@ function drawTable(items) {
     noteCell.innerText = item.note; // เพิ่มโน้ต
 
     const fileCell = row.insertCell();
-
+    row.insertCell().innerText = item.editor;
     row.insertCell().innerText = item.likes.length;
     
     const actionCell = row.insertCell();
@@ -184,7 +184,7 @@ export async function handleLikeItem(itemId,likeButton) {
 export async function handleEditItem(itemId, item, noteCell, fileCell) {
   var container;
   const userName = localStorage.getItem("userName");
-  if(userName===item.name){
+  if(userName===item.name || item.editor.includes(userName)){
   // ลบข้อความเดิมออกจาก noteCell
   noteCell.innerHTML = "";
   if(item.fileName){
@@ -296,7 +296,7 @@ else{
 
 export async function handleCreateItem() {
   const nameToAdd = document.getElementById("member-name-to-add").textContent;
-
+  const editor = document.getElementById("filter-name-editor").value;
   const subjectToAdd = document.getElementById("subject-to-add");
   const noteToAdd = document.getElementById("note-to-add");
   const fileInput = document.getElementById("files");
@@ -314,6 +314,7 @@ export async function handleCreateItem() {
             name: nameToAdd,
             subject: subjectToAdd.value.trim(),
             note: noteToAdd.value.trim(),
+            editor:editor,
             like: 0,
           };
     
@@ -342,6 +343,7 @@ export async function handleCreateItem() {
         subject: subjectToAdd.value.trim(),
         note: noteToAdd.value.trim(),
         like: 0,
+        editor:editor,
         fileName : fileName,
         filePath : filePath,
       };
