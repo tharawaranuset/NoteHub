@@ -55,13 +55,13 @@ function drawTable(items) {
 
     const editorButton = document.createElement("button");
     editorButton.addEventListener("click", () =>
-      handleAddEditorin(item._id, editorSelect.value)
+      handleAddEditorin(item._id,item.name ,editorSelect.value)
     );
     editorButton.innerText = "เพิ่ม";
 
     const delEditorButton = document.createElement("button");
     delEditorButton.addEventListener("click", () =>
-      handleDelEditorin(item._id, editorSelect.value)
+      handleDelEditorin(item._id,item.name , editorSelect.value)
     );
     delEditorButton.innerText = "ลบ";
 
@@ -282,14 +282,24 @@ export async function handleEditItem(itemId, item, noteCell, fileCell) {
   }
 }
 
-export async function handleAddEditorin(id, userName) {
+export async function handleAddEditorin(id,name, userName) {
+  if(name===localStorage.getItem("userName")){
   await handleAddEditor(id, userName);
   await fetchAndDrawTable();
+  }
+  else{
+    alert("This one is not your");
+  }
 }
 
-export async function handleDelEditorin(id, userName) {
+export async function handleDelEditorin(id,name, userName) {
+  if(name===localStorage.getItem("userName")){
   await handleDelEditor(id, userName);
   await fetchAndDrawTable();
+}
+else{
+  alert("This one is not your");
+}
 }
 
 export async function handleCreateItem() {
