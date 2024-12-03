@@ -113,27 +113,11 @@ function drawTable(items) {
 
     const newrow = table.insertRow();
     commentButton.addEventListener("click", (e) => {
-      e.target.disabled = true;
-      handleCreateComment(actionCell);
+      handleCreateComment(actionCell, newrow, item ,e, viewCommentButton);
     });
 
     viewCommentButton.addEventListener("click", async () => {
-      const hideCommentButton = document.createElement("button");
-      hideCommentButton.innerText = "Hide Comments";
-      actionCell.removeChild(viewCommentButton);
-      actionCell.appendChild(hideCommentButton);
-
-      const comments = await getComments(item._id);
-      updateCommentList(comments, newrow, item._id);
-
-      hideCommentButton.addEventListener("click", () => {
-        const commentList = document.getElementById(`comments-${item._id}`);
-        if (commentList) {
-          commentList.remove();
-        }
-        actionCell.removeChild(hideCommentButton);
-        actionCell.appendChild(viewCommentButton);
-      });
+      handleViewComment(actionCell,viewCommentButton,newrow,item);
     });
 
     const editButton = document.createElement("button");
@@ -165,7 +149,7 @@ export async function handleDeleteItem(id, name, fileName) {
     await fetchAndDrawTable();
     clearFilter();
   } else {
-    alert("This one is not your");
+    alert("This one is not yours.");
   }
 }
 
@@ -294,7 +278,7 @@ export async function handleEditItem(itemId, item, noteCell, fileCell) {
     noteCell.appendChild(saveButton);
     noteCell.appendChild(cancelButton); // เพิ่มปุ่มยกเลิก
   } else {
-    alert("This one is not your");
+    alert("This one is not yours.");
   }
 }
 
@@ -385,7 +369,9 @@ export async function handleFilterItem() {
   await drawTable(items);
 }
 
-function updateCommentList(comments, actionCell, itemId) {
+
+
+export async function updateCommentList(comments, actionCell, itemId) {
   // Check if a comment list already exists and remove it
   const existingCommentList = document.getElementById(`comments-${itemId}`);
   if (existingCommentList) {
@@ -465,7 +451,7 @@ function updateCommentList(comments, actionCell, itemId) {
           updateCommentList(updatedComments, actionCell, itemId);
         }
       } else {
-        alert("This one is not your");
+        alert("This one is not yours.");
       }
     });
 
@@ -479,6 +465,79 @@ function updateCommentList(comments, actionCell, itemId) {
 
   // Append the updated comment list to the action cell
   actionCell.appendChild(commentList);
+}
+
+export async function handleCreateComment(actionCell, newrow, item, e,viewCommentButton) {
+  e.target.disabled = true;
+  let textArea = document.createElement("textarea");
+  const postCommentButton = document.createElement("button");
+  textArea.id = "comment-section";
+  postCommentButton.innerText = "Post";
+  postCommentButton.id = "post-comment-button";
+  //post
+  postCommentButton.addEventListener("click", async () => {
+    const commentText = textArea.value.trim();
+    if (!commentText) {
+      alert("Comment cannot be empty!");
+      return;
+    }
+    const author = localStorage.getItem("userName");
+    // Post the comment to the server
+    await addComments(item._id, commentText, author);
+
+    // Clear the text area and UI elements for comment input
+    e.target.disabled = false;
+    actionCell.removeChild(postCommentButton);
+    actionCell.removeChild(textArea);
+    actionCell.removeChild(cancelButton);
+
+    // alert("Comment posted successfully!");
+
+    // Fetch and display the updated comments list dynamically
+    const comments = await getComments(item._id);
+    handleViewComment(actionCell,viewCommentButton,newrow,item);
+    updateCommentList(comments, newrow, item._id);
+    
+  });
+
+  const cancelButton = document.createElement("button");
+  cancelButton.innerText = "❌";
+  cancelButton.addEventListener("click", () => {
+    e.target.disabled = false;
+    actionCell.removeChild(postCommentButton);
+    actionCell.removeChild(textArea);
+    actionCell.removeChild(cancelButton);
+  });
+
+  textArea.setAttribute("cols", "50");
+  textArea.setAttribute("rows", "5");
+  textArea.setAttribute("placeholder", "Enter your message here");
+  actionCell.appendChild(textArea);
+  actionCell.appendChild(postCommentButton);
+  actionCell.appendChild(cancelButton);
+}
+
+
+export async function handleViewComment(actionCell, viewCommentButton, newrow, item) {
+  const hideCommentButton = document.createElement("button");
+  hideCommentButton.innerText = "Hide Comments";
+  actionCell.removeChild(viewCommentButton);
+  actionCell.appendChild(hideCommentButton);
+
+  const comments = await getComments(item._id);
+  updateCommentList(comments, newrow, item._id);
+
+  hideCommentButton.addEventListener("click", () => {
+    handleHideComment(actionCell, viewCommentButton, hideCommentButton, item);
+  });
+}
+export async function handleHideComment(actionCell, viewCommentButton, hideCommentButton, item) {
+  const commentList = document.getElementById(`comments-${item._id}`);
+  if (commentList) {
+    commentList.remove();
+  }
+  actionCell.removeChild(hideCommentButton);
+  actionCell.appendChild(viewCommentButton);
 }
 
 export async function handleFindAndDeleteElementOfMember(userName) {
