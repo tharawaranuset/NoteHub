@@ -56,6 +56,41 @@ export async function editItem(itemId,newNote,fileName,filePath) {
   });
 }
 
+export async function handleAddEditor(id,userName) {
+  try {
+    const response = await fetch(`${BACKEND_URL}/items/${id}/addeditor`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ userName: userName }),
+    });
+
+    if (!response.ok) {
+      // ถ้าเซิร์ฟเวอร์ตอบกลับไม่สำเร็จ (เช่น 400 หรือ 500)
+      const errorData = await response.json();
+      console.error("Failed to add editor:", errorData);
+      return;  // คืนค่าหรือหยุดการทำงาน
+    }
+
+    const data = await response.json();
+    console.log("Editor added successfully:", data);
+  } catch (error) {
+    console.error("Error adding editor:", error);
+  }
+}
+
+export async function handleDelEditor(id,userName) {
+    await fetch(`${BACKEND_URL}/items/${id}/deleditor`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ userName: userName }),
+    });
+
+}
+
 export async function filterItems(filterName, filterSubject) {
   // Build the query string with the parameters
   const queryString = new URLSearchParams({

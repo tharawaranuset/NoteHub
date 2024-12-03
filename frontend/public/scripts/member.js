@@ -1,6 +1,6 @@
 // member.js
 
-import { createMember, deleteMember, findMember, getMembers } from "./api.js";
+import { createMember, deleteMember, findMember, getItems, getMembers } from "./api.js";
 import { fetchAndDrawTable } from "./table.js";
 
 // Populate the member list and dropdowns
@@ -10,7 +10,7 @@ export async function populateMembers() {
   const filterSelectEditor = document.getElementById("filter-name-editor");
   memberList.innerHTML = "";
   filterSelect.innerHTML = '<option value="ทั้งหมด">-- ทั้งหมด --</option>';
-  filterSelectEditor.innerHTML = '<option value="ทั้งหมด">-- ทั้งหมด --</option>';
+  filterSelectEditor.innerHTML = '<option value="">---------</option>';
   // Fetch all members from the backend
   const members = await getMembers();
 
@@ -36,6 +36,7 @@ export async function populateMembers() {
     filterSelectEditor.appendChild(option);
   });
 }
+
 export async function handleCreateNewMember() {
   const userName = localStorage.getItem("userName");
 
@@ -68,6 +69,7 @@ export async function handleCreateMember() {
 // Handle deleting a member
 export async function handleDeleteMember(userName) {
   // Call the API to delete the member
+  // let items = await getItems();
 
   await deleteMember(userName);
 

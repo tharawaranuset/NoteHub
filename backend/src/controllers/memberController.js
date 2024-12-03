@@ -48,6 +48,12 @@ export const deleteMember = async (req, res) => {
       return res.status(404).json({ message: "ไม่พบสมาชิกที่ต้องการลบ" });
     }
     await Item.deleteMany({ name: { $in: member.name } });
+
+    await Item.updateMany(
+      { editor: userName }, // ค้นหา Item ที่มี userName ใน editor
+      { $pull: { editor: userName } } // ลบ userName ออกจาก array editor
+    );
+    
     // ลบสมาชิก
     await Member.deleteOne({ _id: member._id });
 

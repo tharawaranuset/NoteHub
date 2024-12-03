@@ -41,6 +41,55 @@ export const editItems = async (req, res) => {
   }
 };
 
+export const addEditor = async (req, res) => {
+  const { id } = req.params;
+  const { userName } = req.body;
+
+  try {
+    const item = await Item.findById(id);
+    if (!item) return res.status(404).json({ message: "Item not found" });  // ส่งข้อมูลเป็น JSON
+
+    if (item.editor.includes(userName)) {
+      return res.status(400).json({ message: "User is already an editor" });  // ส่งข้อมูลเป็น JSON
+    }
+
+    if(userName!=""){
+    item.editor.push(userName);
+    await item.save();
+
+    res.status(200).json({ message: "Item updated successfully", item });
+    }
+    else{
+      res.status(400).json({ message: "No User", item });
+    }
+  } catch (err) {
+    res.status(500).json({ message: "Error updating item" });  // ส่งข้อมูลเป็น JSON
+  }
+};
+
+export const delEditor = async (req, res) => {
+  const { id } = req.params;
+  const { userName } = req.body;
+
+  try {
+    const item = await Item.findById(id);
+    if (!item) return res.status(404).json({ message: "Item not found" });  // ส่งข้อมูลเป็น JSON
+
+    // ตรวจสอบว่า userName อยู่ใน editor หรือไม่
+    if (!item.editor.includes(userName)) {
+      return res.status(400).json({ message: "User is not an editor" });  // ส่งข้อมูลเป็น JSON
+    }
+
+    // ลบ userName ออกจาก array editor
+    item.editor = item.editor.filter((editor) => editor !== userName);
+    await item.save();
+
+    res.status(200).json({ message: "Editor removed successfully", item });
+  } catch (err) {
+    res.status(500).json({ message: "Error updating item" });  // ส่งข้อมูลเป็น JSON
+  }
+};
+
 export const getItems = async (req, res) => {
   const items = await Item.find();
 
