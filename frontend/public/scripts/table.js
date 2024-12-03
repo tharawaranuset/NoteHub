@@ -10,7 +10,6 @@ import {
   deleteComment,
   likeItem,
   editItem,
-  createMember,
   updateMember,
   findMember,
   uploadFile,
@@ -19,7 +18,6 @@ import {
   handleDelEditor,
   getMembers,
 } from "./api.js";
-import { populateMembers } from "./member.js";
 
 function drawTable(items) {
   const table = document.getElementById("main-table-body");
@@ -57,13 +55,13 @@ function drawTable(items) {
 
     const editorButton = document.createElement("button");
     editorButton.addEventListener("click", () =>
-      handleAddEditorin(item._id, editorSelect.value),
+      handleAddEditorin(item._id, editorSelect.value)
     );
     editorButton.innerText = "เพิ่ม";
 
     const delEditorButton = document.createElement("button");
     delEditorButton.addEventListener("click", () =>
-      handleDelEditorin(item._id, editorSelect.value),
+      handleDelEditorin(item._id, editorSelect.value)
     );
     delEditorButton.innerText = "ลบ";
 
@@ -357,12 +355,12 @@ export async function handleEditItem(itemId, item, noteCell, fileCell) {
   }
 }
 
-export async function handleAddEditorin(id,userName) {
+export async function handleAddEditorin(id, userName) {
   await handleAddEditor(id, userName);
   await fetchAndDrawTable();
 }
 
-export async function handleDelEditorin(id,userName){
+export async function handleDelEditorin(id, userName) {
   await handleDelEditor(id, userName);
   await fetchAndDrawTable();
 }
@@ -541,14 +539,6 @@ function updateCommentList(comments, actionCell, itemId) {
 
   // Append the updated comment list to the action cell
   actionCell.appendChild(commentList);
-}
-
-export async function handleFindAndDeleteElementOfMember(userName) {
-  const member = await findMember(userName);
-  for (const itemId of member.items) {
-    console.log(itemId);
-    deleteItem(itemId);
-  }
 }
 
 export async function handleCreteFileBox(fileCell) {

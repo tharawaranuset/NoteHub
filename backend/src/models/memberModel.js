@@ -9,10 +9,12 @@ const memberSchema = new mongoose.Schema({
     trim: true,
     unique: true,
   },
-  items: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Item'  // Link the member to the Item model
-  }]
+  items: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Item", // Link the member to the Item model
+    },
+  ],
 });
 
 // Create and export the Member model

@@ -1,18 +1,16 @@
-
 import Item from "../models/itemModel.js";
 
 export const createItem = async (req, res) => {
   // if(!req.body.name || !req.body.subject || !req.body.note){
   try {
-    
     const newItem = new Item(req.body);
-    if(req.file){
-      console.log("path="+req.file.path);
+    if (req.file) {
+      console.log("path=" + req.file.path);
       newItem.files = req.file.path;
     }
     await newItem.save();
 
-    res.status(200).json({ message: "OK" ,id: newItem._id});
+    res.status(200).json({ message: "OK", id: newItem._id });
   } catch (err) {
     if (err.name === "ValidationError") {
       res.status(400).json({ error: "Bad Request" });
@@ -32,7 +30,7 @@ export const editItems = async (req, res) => {
 
     item.note = note; // อัปเดตเนื้อหาของโน้ต
     item.fileName = fileName; //อัพเดทชื่อไฟล์
-    item.filePath = filePath;  // อัพเดทที่อยู่ไฟล์
+    item.filePath = filePath; // อัพเดทที่อยู่ไฟล์
     await item.save();
 
     res.status(200).json({ message: "Item updated successfully", item });
@@ -47,23 +45,22 @@ export const addEditor = async (req, res) => {
 
   try {
     const item = await Item.findById(id);
-    if (!item) return res.status(404).json({ message: "Item not found" });  // ส่งข้อมูลเป็น JSON
+    if (!item) return res.status(404).json({ message: "Item not found" }); // ส่งข้อมูลเป็น JSON
 
     if (item.editor.includes(userName)) {
-      return res.status(400).json({ message: "User is already an editor" });  // ส่งข้อมูลเป็น JSON
+      return res.status(400).json({ message: "User is already an editor" }); // ส่งข้อมูลเป็น JSON
     }
 
-    if(userName!=""){
-    item.editor.push(userName);
-    await item.save();
+    if (userName != "") {
+      item.editor.push(userName);
+      await item.save();
 
-    res.status(200).json({ message: "Item updated successfully", item });
-    }
-    else{
+      res.status(200).json({ message: "Item updated successfully", item });
+    } else {
       res.status(400).json({ message: "No User", item });
     }
   } catch (err) {
-    res.status(500).json({ message: "Error updating item" });  // ส่งข้อมูลเป็น JSON
+    res.status(500).json({ message: "Error updating item" }); // ส่งข้อมูลเป็น JSON
   }
 };
 
@@ -73,11 +70,11 @@ export const delEditor = async (req, res) => {
 
   try {
     const item = await Item.findById(id);
-    if (!item) return res.status(404).json({ message: "Item not found" });  // ส่งข้อมูลเป็น JSON
+    if (!item) return res.status(404).json({ message: "Item not found" }); // ส่งข้อมูลเป็น JSON
 
     // ตรวจสอบว่า userName อยู่ใน editor หรือไม่
     if (!item.editor.includes(userName)) {
-      return res.status(400).json({ message: "User is not an editor" });  // ส่งข้อมูลเป็น JSON
+      return res.status(400).json({ message: "User is not an editor" }); // ส่งข้อมูลเป็น JSON
     }
 
     // ลบ userName ออกจาก array editor
@@ -86,7 +83,7 @@ export const delEditor = async (req, res) => {
 
     res.status(200).json({ message: "Editor removed successfully", item });
   } catch (err) {
-    res.status(500).json({ message: "Error updating item" });  // ส่งข้อมูลเป็น JSON
+    res.status(500).json({ message: "Error updating item" }); // ส่งข้อมูลเป็น JSON
   }
 };
 
@@ -96,8 +93,7 @@ export const getItems = async (req, res) => {
   res.status(200).json(items);
 };
 
-export const likeItems = async (req,res) =>{
-
+export const likeItems = async (req, res) => {
   try {
     const { itemId } = req.params;
     const { userId } = req.body;
@@ -112,38 +108,35 @@ export const likeItems = async (req,res) =>{
 
     if (alreadyLiked) {
       // หากไลค์แล้ว, ทำการ "อันไลค์"
-      item.likes = item.likes.filter(id => id !== userId);  // ลบ userId ออกจากอาร์เรย์ likes
-      await item.save();  // บันทึกการเปลี่ยนแปลงในฐานข้อมูล
+      item.likes = item.likes.filter((id) => id !== userId); // ลบ userId ออกจากอาร์เรย์ likes
+      await item.save(); // บันทึกการเปลี่ยนแปลงในฐานข้อมูล
       return res.status(200).json({ liked: false });
     } else {
       // หากยังไม่ไลค์, ทำการ "ไลค์"
-      item.likes.push(userId);  // เพิ่ม userId ไปยังอาร์เรย์ likes
-      await item.save();  // บันทึกการเปลี่ยนแปลงในฐานข้อมูล
+      item.likes.push(userId); // เพิ่ม userId ไปยังอาร์เรย์ likes
+      await item.save(); // บันทึกการเปลี่ยนแปลงในฐานข้อมูล
       return res.status(200).json({ liked: true });
     }
-
   } catch (err) {
     console.error(err);
     return res.status(500).send("Error processing request");
   }
-
 };
 
 export const deleteItem = async (req, res) => {
-  const { id } = req.params;  // Assuming you pass the item ID via the URL
+  const { id } = req.params; // Assuming you pass the item ID via the URL
 
   try {
-    const deletedItem = await Item.findByIdAndDelete(id);  // Delete item by ID
+    const deletedItem = await Item.findByIdAndDelete(id); // Delete item by ID
 
     if (!deletedItem) {
-      return res.status(404).json({ error: "Item not found" });  // Item not found
+      return res.status(404).json({ error: "Item not found" }); // Item not found
     }
 
     res.status(200).json({ message: "Item successfully deleted" });
   } catch (err) {
     res.status(500).json({ error: "Internal server error." });
   }
-  
 };
 
 export const filterItems = async (req, res) => {
@@ -169,7 +162,4 @@ export const filterItems = async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: "Internal server error." });
   }
-  // WARNING: you are not allowed to query all items and do something to filter it afterward.
-  // Otherwise, you will be punished by -0.5 scores for this part
-  // res.status(501).send("Unimplemented");
 };

@@ -1,6 +1,6 @@
 // member.js
 
-import { createMember, deleteMember, findMember, getItems, getMembers } from "./api.js";
+import { createMember, deleteMember, findMember, getMembers } from "./api.js";
 import { fetchAndDrawTable } from "./table.js";
 
 // Populate the member list and dropdowns
@@ -50,10 +50,13 @@ export async function handleCreateMember() {
   const subjectToAdd = document.getElementById("subject-to-add");
   const noteToAdd = document.getElementById("note-to-add");
 
-  if (!nameToAdd  || subjectToAdd.value.trim()==="ทั้งหมด" || !noteToAdd.value.trim()) {
+  if (
+    !nameToAdd ||
+    subjectToAdd.value.trim() === "ทั้งหมด" ||
+    !noteToAdd.value.trim()
+  ) {
     return; // Exit if validation fails
-  }
-  else {
+  } else {
     // Call the API to create the member
     await createMember(nameToAdd);
 
@@ -62,9 +65,7 @@ export async function handleCreateMember() {
     await populateMembers();
 
     // Clear the input field
-
   }
-  
 }
 // Handle deleting a member
 export async function handleDeleteMember(userName) {
@@ -84,5 +85,4 @@ export async function handleFindAndDeleteElementOfMember(userName) {
   for (const itemId of member.items) {
     await deleteItem(itemId);
   }
-  
 }
