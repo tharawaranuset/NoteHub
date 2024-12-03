@@ -1,11 +1,10 @@
-
 import Item from "../models/itemModel.js";
 
 // Add a comment to an item
 export const addComment = async (req, res) => {
   try {
     const { id } = req.params; // Get item ID
-    const { comment ,author} = req.body; // Get comment text from the request body
+    const { comment, author } = req.body; // Get comment text from the request body
 
     if (!comment || !comment.trim()) {
       return res.status(400).json({ message: "Comment cannot be empty!" });
@@ -16,17 +15,23 @@ export const addComment = async (req, res) => {
       return res.status(404).json({ message: "Item not found" });
     }
 
-    if(author === null){
+    if (author === null) {
       item.comments.push({ text: comment }); // Add the comment
-    }
-    else{
-      item.comments.push({ text: comment ,author: author}); // Add the comment
+    } else {
+      item.comments.push({ text: comment, author: author }); // Add the comment
     }
     await item.save(); // Save the updated item
 
-    res.status(201).json({ message: "Comment added successfully!", comments: item.comments });
+    res
+      .status(201)
+      .json({
+        message: "Comment added successfully!",
+        comments: item.comments,
+      });
   } catch (error) {
-    res.status(500).json({ message: "Failed to add comment", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Failed to add comment", error: error.message });
   }
 };
 
@@ -42,7 +47,9 @@ export const getComments = async (req, res) => {
 
     res.status(200).json(item.comments); // Return all comments
   } catch (error) {
-    res.status(500).json({ message: "Failed to fetch comments", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Failed to fetch comments", error: error.message });
   }
 };
 
@@ -77,4 +84,3 @@ export const deleteComment = async (req, res) => {
     res.status(500).json({ error: "Internal server error." });
   }
 };
-

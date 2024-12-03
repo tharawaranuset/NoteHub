@@ -1,4 +1,3 @@
-
 import { BACKEND_URL } from "./config.js";
 
 export async function getItems() {
@@ -8,24 +7,24 @@ export async function getItems() {
 }
 
 export async function createItem(item) {
-    const response = await fetch(`${BACKEND_URL}/items`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(item),
-    });
+  const response = await fetch(`${BACKEND_URL}/items`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(item),
+  });
 
-    // ตรวจสอบสถานะการตอบกลับของคำขอ
-    if (!response.ok) {
-      throw new Error("Failed to create item");
-    }
+  // ตรวจสอบสถานะการตอบกลับของคำขอ
+  if (!response.ok) {
+    throw new Error("Failed to create item");
+  }
 
-    // แปลงการตอบกลับจากเซิร์ฟเวอร์เป็น JSON
-    const data = await response.json();
+  // แปลงการตอบกลับจากเซิร์ฟเวอร์เป็น JSON
+  const data = await response.json();
 
-    // ส่งกลับ id ของไอเท็มใหม่
-    return data.id;  // สมมติว่าเซิร์ฟเวอร์ส่งกลับ id ของไอเท็มใหม่
+  // ส่งกลับ id ของไอเท็มใหม่
+  return data.id; // สมมติว่าเซิร์ฟเวอร์ส่งกลับ id ของไอเท็มใหม่
 }
 
 export async function deleteItem(id) {
@@ -34,7 +33,7 @@ export async function deleteItem(id) {
   });
 }
 
-export async function likeItem(itemId,userId,likeButton) {
+export async function likeItem(itemId, userId, likeButton) {
   //console.log(userId);
   await fetch(`${BACKEND_URL}/items/${itemId}`, {
     method: "PATCH",
@@ -42,21 +41,25 @@ export async function likeItem(itemId,userId,likeButton) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ userId: userId }),
-  })
+  });
 }
 
-export async function editItem(itemId,newNote,fileName,filePath) {
+export async function editItem(itemId, newNote, fileName, filePath) {
   //console.log(userId);
   await fetch(`${BACKEND_URL}/items/${itemId}/edit`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ note: newNote , fileName: fileName, filePath: filePath}),
+    body: JSON.stringify({
+      note: newNote,
+      fileName: fileName,
+      filePath: filePath,
+    }),
   });
 }
 
-export async function handleAddEditor(id,userName) {
+export async function handleAddEditor(id, userName) {
   try {
     const response = await fetch(`${BACKEND_URL}/items/${id}/addeditor`, {
       method: "PATCH",
@@ -70,7 +73,7 @@ export async function handleAddEditor(id,userName) {
       // ถ้าเซิร์ฟเวอร์ตอบกลับไม่สำเร็จ (เช่น 400 หรือ 500)
       const errorData = await response.json();
       console.error("Failed to add editor:", errorData);
-      return;  // คืนค่าหรือหยุดการทำงาน
+      return; // คืนค่าหรือหยุดการทำงาน
     }
 
     const data = await response.json();
@@ -80,26 +83,27 @@ export async function handleAddEditor(id,userName) {
   }
 }
 
-export async function handleDelEditor(id,userName) {
-    await fetch(`${BACKEND_URL}/items/${id}/deleditor`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ userName: userName }),
-    });
-
+export async function handleDelEditor(id, userName) {
+  await fetch(`${BACKEND_URL}/items/${id}/deleditor`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ userName: userName }),
+  });
 }
 
 export async function filterItems(filterName, filterSubject) {
   // Build the query string with the parameters
   const queryString = new URLSearchParams({
     filterName,
-    filterSubject
+    filterSubject,
   }).toString();
 
   // Make the request with the query string
-  const items = await fetch(`${BACKEND_URL}/items/filter?${queryString}`).then((r) => r.json());
+  const items = await fetch(`${BACKEND_URL}/items/filter?${queryString}`).then(
+    (r) => r.json()
+  );
 
   return items; // Return the filtered items
 }
@@ -113,11 +117,11 @@ export async function createMember(userName) {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({userName}),
+    body: JSON.stringify({ userName }),
   });
 }
 
-export async function updateMember(userName,id) {
+export async function updateMember(userName, id) {
   try {
     const response = await fetch(`${BACKEND_URL}/members`, {
       method: "PATCH",
@@ -132,12 +136,9 @@ export async function updateMember(userName,id) {
       throw new Error("Failed to update member");
     }
 
-    const data = await response.json();  // รับข้อมูลจากการตอบกลับ
+    const data = await response.json(); // รับข้อมูลจากการตอบกลับ
 
-    
-    
-
-    return data;  // ส่งข้อมูลที่ได้รับกลับ (อาจเป็นข้อมูลของสมาชิกที่ได้รับการอัปเดต)
+    return data; // ส่งข้อมูลที่ได้รับกลับ (อาจเป็นข้อมูลของสมาชิกที่ได้รับการอัปเดต)
   } catch (err) {
     console.error("Error in updateMember:", err);
     throw err;
@@ -152,14 +153,16 @@ export async function getMembers() {
 
 export async function findMember(userName) {
   try {
-    const response = await fetch(`${BACKEND_URL}/members/find?userName=${userName}`);  // ส่ง query string ไปยัง API
+    const response = await fetch(
+      `${BACKEND_URL}/members/find?userName=${userName}`
+    ); // ส่ง query string ไปยัง API
     if (!response.ok) {
-      throw new Error('Failed to fetch member');
+      throw new Error("Failed to fetch member");
     }
-    const member = await response.json();  // แปลงข้อมูลเป็น JSON
-    return member;  // ส่งข้อมูลสมาชิกกลับ
+    const member = await response.json(); // แปลงข้อมูลเป็น JSON
+    return member; // ส่งข้อมูลสมาชิกกลับ
   } catch (err) {
-    console.error('Error:', err);
+    console.error("Error:", err);
   }
 }
 
@@ -171,11 +174,11 @@ export async function deleteMember(userName) {
 }
 
 // Post a comment
-export async function addComments(itemId, commentText,author) {
+export async function addComments(itemId, commentText, author) {
   const response = await fetch(`${BACKEND_URL}/comments/${itemId}`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ comment: commentText ,author: author}),
+    body: JSON.stringify({ comment: commentText, author: author }),
   });
   return response.json();
 }
@@ -192,36 +195,37 @@ export async function deleteComment(itemId, commentId) {
   const id = itemId;
   await fetch(`${BACKEND_URL}/comments/${id}/${commentId}`, {
     method: "DELETE",
-  })
+  });
 }
 
-export async function uploadFile(formData){
-  var fileName,filePath;
+export async function uploadFile(formData) {
+  var fileName, filePath;
   try {
     const response = await fetch(`${BACKEND_URL}/file/upload`, {
       method: "POST",
       body: formData,
-    }) .then((response) => response.json())
-    .then((data) => {
+    })
+      .then((response) => response.json())
+      .then((data) => {
         console.log(data.message); // Logs: File uploaded successfully!
         console.log("Uploaded File Name:", data.fileName);
         fileName = data.fileName;
         filePath = data.filePath;
-    })
-    .catch((error) => console.error("Error:", error));
+      })
+      .catch((error) => console.error("Error:", error));
 
     // if (!response.ok) {
     //   throw new Error(`Error: ${response.statusText}`);
     // }
-    return {fileName : fileName, filePath : filePath};
+    return { fileName: fileName, filePath: filePath };
     // document.getElementById("result").innerText = result;
   } catch (err) {
-    console.error('Upload failed:', err);
+    console.error("Upload failed:", err);
     // document.getElementById("result").innerText = `Upload failed: ${err.message}`;
   }
 }
-export async function deleteFile(id){
+export async function deleteFile(id) {
   await fetch(`${BACKEND_URL}/file/delete/${id}`, {
-      method: "DELETE",
-    }) 
+    method: "DELETE",
+  });
 }

@@ -1,7 +1,7 @@
 // controllers/memberController.js
 import Member from "../models/memberModel.js";
-import Item from "../models/itemModel.js";  // Import Item model to delete associated items
-import { response } from "express";
+import Item from "../models/itemModel.js"; // Import Item model to delete associated items
+//import { response } from "express";
 
 // Create a new member
 export const createMember = async (req, res) => {
@@ -9,28 +9,32 @@ export const createMember = async (req, res) => {
     const { userName } = req.body;
 
     if (!userName) {
-      return res.status(400).json({ message: 'Name is required' });
+      return res.status(400).json({ message: "Name is required" });
     }
 
     const alreadyhave = await Member.findOne({ name: userName });
     if (alreadyhave) {
-      return res.status(409).json({ message: 'Member already exists' });
+      return res.status(409).json({ message: "Member already exists" });
     }
 
     const newMember = new Member({ name: userName });
     await newMember.save();
 
-    res.status(200).json({ message: 'Member created successfully', member: newMember });
+    res
+      .status(200)
+      .json({ message: "Member created successfully", member: newMember });
   } catch (err) {
-    console.error('Error creating member:', err);  // เพิ่มข้อความที่ทำให้เห็นข้อผิดพลาดชัดเจนขึ้น
-    res.status(500).json({ error: 'Failed to create member', details: err.message });
+    console.error("Error creating member:", err); // เพิ่มข้อความที่ทำให้เห็นข้อผิดพลาดชัดเจนขึ้น
+    res
+      .status(500)
+      .json({ error: "Failed to create member", details: err.message });
   }
 };
 
 // Get all members
 export const getMembers = async (req, res) => {
   try {
-    const members = await Member.find().populate('items');  // Populate the items associated with each member
+    const members = await Member.find().populate("items"); // Populate the items associated with each member
     res.status(200).json(members);
   } catch (err) {
     res.status(500).json({ error: "Failed to fetch members" });
@@ -43,7 +47,7 @@ export const deleteMember = async (req, res) => {
   try {
     // ค้นหาสมาชิกตาม userName และลบข้อมูล
     const member = await Member.findOne({ name: userName });
-    
+
     if (!member) {
       return res.status(404).json({ message: "ไม่พบสมาชิกที่ต้องการลบ" });
     }
@@ -53,7 +57,7 @@ export const deleteMember = async (req, res) => {
       { editor: userName }, // ค้นหา Item ที่มี userName ใน editor
       { $pull: { editor: userName } } // ลบ userName ออกจาก array editor
     );
-    
+
     // ลบสมาชิก
     await Member.deleteOne({ _id: member._id });
 
@@ -87,9 +91,8 @@ export const updateMember = async (req, res) => {
     console.error("Error updating member:", err);
     res.status(500).json({ error: "Internal server error" });
   }
-
 };
-export const findMember = async(req,res) => {
+export const findMember = async (req, res) => {
   const { userName } = req.query;
 
   if (!userName) {

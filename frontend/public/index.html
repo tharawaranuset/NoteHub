@@ -1,11 +1,15 @@
-
 <!DOCTYPE html>
 <html>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>NoteHub</title> <!-- เพิ่ม emoji ใน title -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32'><text x='0' y='32' font-size='32' fill='black'>📝</text></svg>" type="image/svg+xml" />
+    <title>NoteHub</title>
+    <!-- เพิ่ม emoji ใน title -->
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32'><text x='0' y='32' font-size='32' fill='black'>📝</text></svg>"
+      type="image/svg+xml"
+    />
     <link rel="stylesheet" href="style.css" />
   </head>
 
@@ -14,22 +18,22 @@
       <header><h1 id="app-name">NoteHub</h1></header>
     </section>
 
-    <div id="welcomeMessage" style="display: none;">
+    <div id="welcomeMessage" style="display: none">
       <p>ยินดีต้อนรับ, <span id="userDisplayName"></span>!</p>
       <button id="changeNameButton">เปลี่ยนชื่อ</button>
-  </div>
-  
-  <!-- ส่วนกรอกชื่อผู้ใช้ -->
-  <div id="userForm">
+    </div>
+
+    <!-- ส่วนกรอกชื่อผู้ใช้ -->
+    <div id="userForm">
       <label for="username">กรุณากรอกชื่อของคุณ</label>
       <input type="text" id="username" />
       <button id="saveNameButton">บันทึกชื่อ</button>
-  </div>
+    </div>
 
     <section class="add-and-filter">
       <h2 class="section-title">ตัวกรองโน้ต</h2>
       <select id="filter-name"></select>
-      
+
       <select id="filter-subject">
         <option value="ทั้งหมด">-- ทั้งหมด --</option>
         <option value="Maths">Maths</option>
@@ -61,7 +65,7 @@
           </tr>
         </thead>
 
-        <tr id="newrow-form">            
+        <tr id="newrow-form">
           <td id="member-name-to-add">
             <!-- การแสดงชื่อจาก localStorage โดยไม่ใช้ input -->
           </td>
@@ -75,29 +79,27 @@
             </select>
           </td>
           <td>
-            <input id="note-to-add" type="text" />              
+            <input id="note-to-add" type="text" />
           </td>
           <td>
             <div class="container">
-              <input type="file" id="files" name="file">
+              <input type="file" id="files" name="file" />
               <div id="response" class="response"></div>
             </div>
           </td>
           <td>
-          <select id="filter-name-editor"></select>
+            <select id="filter-name-editor"></select>
           </td>
           <td></td>
           <td><button id="add-newrow">เพิ่ม</button></td>
         </tr>
-        
+
         <tbody id="main-table-body"></tbody>
 
-        <tfoot>
-          
-        </tfoot>
+        <tfoot></tfoot>
       </table>
     </section>
-    
+
     <script type="module" src="scripts/main.js"></script>
   </body>
 </html>

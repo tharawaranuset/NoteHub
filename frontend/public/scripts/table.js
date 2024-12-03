@@ -10,7 +10,6 @@ import {
   deleteComment,
   likeItem,
   editItem,
-  createMember,
   updateMember,
   findMember,
   uploadFile,
@@ -19,7 +18,6 @@ import {
   handleDelEditor,
   getMembers,
 } from "./api.js";
-import { populateMembers } from "./member.js";
 
 function drawTable(items) {
   const table = document.getElementById("main-table-body");
@@ -57,13 +55,13 @@ function drawTable(items) {
 
     const editorButton = document.createElement("button");
     editorButton.addEventListener("click", () =>
-      handleAddEditorin(item._id, editorSelect.value),
+      handleAddEditorin(item._id, editorSelect.value)
     );
     editorButton.innerText = "เพิ่ม";
 
     const delEditorButton = document.createElement("button");
     delEditorButton.addEventListener("click", () =>
-      handleDelEditorin(item._id, editorSelect.value),
+      handleDelEditorin(item._id, editorSelect.value)
     );
     delEditorButton.innerText = "ลบ";
 
@@ -300,12 +298,12 @@ export async function handleEditItem(itemId, item, noteCell, fileCell) {
   }
 }
 
-export async function handleAddEditorin(id,userName) {
+export async function handleAddEditorin(id, userName) {
   await handleAddEditor(id, userName);
   await fetchAndDrawTable();
 }
 
-export async function handleDelEditorin(id,userName){
+export async function handleDelEditorin(id, userName) {
   await handleDelEditor(id, userName);
   await fetchAndDrawTable();
 }
@@ -490,55 +488,6 @@ export async function handleFindAndDeleteElementOfMember(userName) {
     deleteItem(itemId);
   }
 }
-
-export async function handleCreateComment(actionCell){
-  
-  let textArea = document.createElement("textarea");
-  const postCommentButton = document.createElement("button");
-  textArea.id = "comment-section";
-  postCommentButton.innerText = "Post";
-  postCommentButton.id = "post-comment-button";
-  //post
-  postCommentButton.addEventListener("click", async () => {
-    const commentText = textArea.value.trim();
-    if (!commentText) {
-      alert("Comment cannot be empty!");
-      return;
-    }
-    const author = localStorage.getItem("userName");
-    // Post the comment to the server
-    await addComments(item._id, commentText, author);
-
-    // Clear the text area and UI elements for comment input
-    e.target.disabled = false;
-    actionCell.removeChild(postCommentButton);
-    actionCell.removeChild(textArea);
-    actionCell.removeChild(cancelButton);
-
-    // alert("Comment posted successfully!");
-
-    // Fetch and display the updated comments list dynamically
-    const comments = await getComments(item._id);
-    updateCommentList(comments, newrow, item._id);
-  });
-
-  const cancelButton = document.createElement("button");
-  cancelButton.innerText = "❌";
-  cancelButton.addEventListener("click", () => {
-    e.target.disabled = false;
-    actionCell.removeChild(postCommentButton);
-    actionCell.removeChild(textArea);
-    actionCell.removeChild(cancelButton);
-  });
-
-  textArea.setAttribute("cols", "50");
-  textArea.setAttribute("rows", "5");
-  textArea.setAttribute("placeholder", "Enter your message here");
-  actionCell.appendChild(textArea);
-  actionCell.appendChild(postCommentButton);
-  actionCell.appendChild(cancelButton);
-}
-
 
 export async function handleCreteFileBox(fileCell) {
   const container = document.createElement("div");

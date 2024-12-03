@@ -8,6 +8,6 @@ const router = express.Router();
 // Comment routes
 router.post("/:id/", commentController.addComment); // Add a comment
 router.get("/:id/", commentController.getComments); // Get all comments
-router.delete("/:id/:commentId", commentController.deleteComment);  // Delete a member by ID
+router.delete("/:id/:commentId", commentController.deleteComment); // Delete a member by ID
 
 export default router;
