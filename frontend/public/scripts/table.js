@@ -579,7 +579,7 @@ export async function display_file(fileName, id, fileCell){
   const downloadLink = document.createElement("a");
   downloadLink.href = `${BACKEND_URL}/file/download/${id}`;
   downloadLink.target = "_blank";
-  downloadLink.textContent = fileName;
+  downloadLink.textContent = fileName.split("-",2)[1];
 
   fileList.appendChild(downloadLink);
 
