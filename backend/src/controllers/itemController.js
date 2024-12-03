@@ -3,6 +3,9 @@ import Item from "../models/itemModel.js";
 export const createItem = async (req, res) => {
   // if(!req.body.name || !req.body.subject || !req.body.note){
   try {
+    if(req.body.editor===""){
+      delete req.body.editor;
+    }
     const newItem = new Item(req.body);
     if (req.file) {
       console.log("path=" + req.file.path);
