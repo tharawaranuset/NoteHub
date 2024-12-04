@@ -45,7 +45,9 @@ function drawTable(items) {
     getMembers()
       .then((members) => {
         members.forEach((member) => {
+          if(member.name!==item.name){
           editorSelect.innerHTML += `<option value="${member.name}">${member.name}</option>`;
+          }
         });
       })
       .catch((error) => console.error("ไม่สามารถดึงข้อมูลสมาชิกได้:", error));
@@ -247,7 +249,7 @@ export async function handleEditItem(itemId, item, noteCell, fileCell, editButto
           // อัปเดตข้อมูลในแถวและเซลล์
           item.note = newNote;
           noteCell.innerText = newNote; // แสดงข้อความที่แก้ไขแล้ว
-        
+          location.reload();
       } else {
           alert("ข้อความไม่ควรว่างเปล่า!");
       }

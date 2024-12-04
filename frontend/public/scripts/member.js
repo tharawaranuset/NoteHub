@@ -32,9 +32,11 @@ export async function populateMembers() {
   });
 
   members.forEach((member) => {
+    if(member.name!==localStorage.getItem("userName")){
     const option = document.createElement("option");
     option.value = option.textContent = member.name;
     filterSelectEditor.appendChild(option);
+    }
   });
 }
 
