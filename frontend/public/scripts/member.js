@@ -18,13 +18,9 @@ export async function populateMembers() {
   members.forEach((member) => {
     const li = document.createElement("li");
     li.textContent = member.name;
-    // const button = document.createElement("button");
-    // button.addEventListener("click", () => handleDeleteMember(member.name));
-    // button.innerText = "ไล่";
 
     const div = document.createElement("div");
     div.appendChild(li);
-    // div.appendChild(button);
     memberList.appendChild(div);
   });
 
@@ -68,8 +64,6 @@ export async function handleCreateMember() {
     // Refresh the member list and table
     await fetchAndDrawTable();
     await populateMembers();
-
-    // Clear the input field
   }
 }
 // Handle deleting a member

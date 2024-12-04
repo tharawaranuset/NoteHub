@@ -79,11 +79,6 @@ document.addEventListener("DOMContentLoaded", () => {
     handleFilterItem();
   });
 
-  // const addMemberButton = document.getElementById("add-newrow");
-  // addMemberButton.addEventListener("click", () => {
-  //   handleCreateMember();
-  // });
-
   const memberName = localStorage.getItem("userName");
   const memberNameElement = document.getElementById("member-name-to-add");
 

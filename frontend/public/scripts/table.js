@@ -1,13 +1,10 @@
-import { BACKEND_URL } from "./config.js";
-
+import {handleCreateComment, handleViewComment} from "./comment.js"
+import { handleCreteFileBox, display_file } from "./file.js";
 import {
   createItem,
   deleteItem,
   getItems,
   filterItems,
-  addComments,
-  getComments,
-  deleteComment,
   likeItem,
   editItem,
   updateMember,
@@ -122,9 +119,10 @@ function drawTable(items) {
 
     const editButton = document.createElement("button");
     editButton.innerText = "แก้ไข";
-    editButton.addEventListener("click", () =>
-      handleEditItem(item._id, item, noteCell, fileCell)
-    );
+    editButton.addEventListener("click", () =>{
+      editButton.disabled = true;
+      handleEditItem(item._id, item, noteCell, fileCell, editButton)
+    });
 
     actionCell.appendChild(editButton);
     actionCell.appendChild(deleteButton);
@@ -169,15 +167,16 @@ export async function handleLikeItem(itemId, likeButton) {
   clearFilter();
 }
 
-export async function handleEditItem(itemId, item, noteCell, fileCell) {
+export async function handleEditItem(itemId, item, noteCell, fileCell, editButton) {
   var container;
   const userName = localStorage.getItem("userName");
   if (userName === item.name || item.editor.includes(userName)) {
     // ลบข้อความเดิมออกจาก noteCell
     noteCell.innerHTML = "";
+    console.log(item.fileName)
     if (item.fileName) {
       const deleteButton = document.createElement("button");
-      deleteButton.id = "delete-edit";
+      deleteButton.id = `delete-edit-${item._id}`;
       deleteButton.addEventListener("click", () => {
         fileCell.removeChild(
           document.getElementById(`file-list${item.fileName}`)
@@ -207,13 +206,16 @@ export async function handleEditItem(itemId, item, noteCell, fileCell) {
     const saveButton = document.createElement("button");
     saveButton.innerText = "บันทึก";
     saveButton.addEventListener("click", async () => {
+      editButton.disabled = false;
       const newNote = input.value; // รับค่าที่ผู้ใช้แก้ไข
       var filename = "",
         filepath = "";
       const fileInput = document.getElementById("files-edit");
       const fileContainer = document.getElementById(`container-edit`);
-      if (item.fileName=="" && fileInput.files[0]) {
-        fileCell.removeChild(fileContainer);
+      if(fileContainer)fileCell.removeChild(fileContainer);
+      
+      if (fileInput && fileInput.files[0]) {
+        
         const file = fileInput.files[0];
         const maxSize = 5 * 1024 * 1024; // 5MB
 
@@ -238,23 +240,30 @@ export async function handleEditItem(itemId, item, noteCell, fileCell) {
         filepath = item.filePath;
       }
       
-      const deleteButton = document.getElementById("delete-edit");
+      const deleteButton = document.getElementById(`delete-edit-${item._id}`);
       if (newNote.trim() !== "") {
       // เรียก API แก้ไขโน้ต
-        await editItem(itemId, newNote, filename, filepath);
-
-        // อัปเดตข้อมูลในแถวและเซลล์
-        item.note = newNote;
-        noteCell.innerText = newNote; // แสดงข้อความที่แก้ไขแล้ว
+          await editItem(itemId, newNote, filename, filepath);
+          // อัปเดตข้อมูลในแถวและเซลล์
+          item.note = newNote;
+          noteCell.innerText = newNote; // แสดงข้อความที่แก้ไขแล้ว
         
       } else {
-        alert("ข้อความไม่ควรว่างเปล่า!");
+          alert("ข้อความไม่ควรว่างเปล่า!");
       }
-      if (!fileCell.hasChildNodes()) {
-        display_file(filename, item._id, fileCell);
-      } else{
-        fileCell.removeChild(deleteButton)
+      
+      if (!fileCell.hasChildNodes() && fileInput.files[0]) {
+          console.log(0);
+          display_file(filename, item._id, fileCell);
+      }else if(!fileCell.hasChildNodes() ) {
+          console.log(1);
+          fileCell.innerText = "No file"; 
       }
+      else{
+          console.log(2);
+          fileCell.removeChild(deleteButton)
+      }
+
     });
 
     // สร้างปุ่มยกเลิก (ถ้าผู้ใช้ต้องการยกเลิกการแก้ไข)
@@ -262,11 +271,14 @@ export async function handleEditItem(itemId, item, noteCell, fileCell) {
     cancelButton.innerText = "ยกเลิก";
     cancelButton.addEventListener("click", () => {
       // คืนค่าให้เป็นข้อความเดิม
-      const deletebutton = document.getElementById(`delete-edit`);
+      editButton.disabled = false;
+
+      const deletebutton = document.getElementById(`delete-edit-${item._id}`);
       const fileContainer = document.getElementById(`container-edit`);
       noteCell.innerText = item.note;
       if (fileContainer) {
         fileCell.removeChild(fileContainer);
+        fileCell.innerText = "No file"; 
       }
       if (deletebutton) {
         fileCell.removeChild(deletebutton);
@@ -287,6 +299,10 @@ export async function handleAddEditorin(id, name, userName) {
     const subjectToAdd = document.getElementById("subject-to-add");
     const noteToAdd = document.getElementById("note-to-add");
     const fileInput = document.getElementById("files");
+    if(userName===""){
+      alert("Please select valid user.");
+      return;
+    }
     await handleAddEditor(id, userName);
     await fetchAndDrawTable();
     subjectToAdd.value = "ทั้งหมด";
@@ -304,6 +320,10 @@ export async function handleDelEditorin(id, name, userName) {
     const subjectToAdd = document.getElementById("subject-to-add");
     const noteToAdd = document.getElementById("note-to-add");
     const fileInput = document.getElementById("files");
+    if(userName===""){
+      alert("Please select valid user.");
+      return;
+    }
     await handleDelEditor(id, userName);
     await fetchAndDrawTable();
     subjectToAdd.value = "ทั้งหมด";
@@ -393,219 +413,10 @@ export async function handleFilterItem() {
   await drawTable(items);
 }
 
-
-
-export async function updateCommentList(comments, actionCell, itemId) {
-  // Check if a comment list already exists and remove it
-  const existingCommentList = document.getElementById(`comments-${itemId}`);
-  if (existingCommentList) {
-    existingCommentList.remove();
-  }
-
-  // Create a new comment list
-  const commentList = document.createElement("ul");
-  commentList.id = `comments-${itemId}`;
-
-  comments.forEach((comment) => {
-    const listItem = document.createElement("li");
-    listItem.innerText = `${comment.author}: ${comment.text}`;
-
-    // Create Edit button
-    const editButton = document.createElement("button");
-    editButton.innerText = "Edit";
-    editButton.style.marginLeft = "10px"; // Add spacing
-    editButton.addEventListener("click", () => {
-      const userName = localStorage.getItem("userName");
-      if (userName === comment.author) {
-        // Replace comment text with input field
-        const editInput = document.createElement("input");
-        editInput.type = "text";
-        editInput.value = comment.text;
-        editInput.style.marginRight = "10px";
-
-        const saveButton = document.createElement("button");
-        saveButton.innerText = "Save";
-        saveButton.addEventListener("click", async () => {
-          const newCommentText = editInput.value.trim();
-          if (newCommentText) {
-            // Update the comment in the database
-            await addComments(itemId, newCommentText, comment.author); // Assuming `addComments` can update comments
-            await deleteComment(itemId, comment._id);
-            // Refresh comments
-            const updatedComments = await getComments(itemId);
-            updateCommentList(updatedComments, actionCell, itemId);
-          } else {
-            alert("Comment cannot be empty!");
-          }
-        });
-
-        const cancelButton = document.createElement("button");
-        cancelButton.innerText = "Cancel";
-        cancelButton.addEventListener("click", () => {
-          // Restore original comment text
-          updateCommentList(comments, actionCell, itemId);
-        });
-
-        // Clear list item and add editing elements
-        listItem.innerHTML = ""; // Clear the current content
-        listItem.appendChild(editInput);
-        listItem.appendChild(saveButton);
-        listItem.appendChild(cancelButton);
-      } else {
-        alert("You can only edit your own comments.");
-      }
-    });
-
-    // Create a Delete button
-    const deleteButton = document.createElement("button");
-    deleteButton.innerText = "Delete";
-    deleteButton.style.marginLeft = "10px"; // Add spacing
-    deleteButton.addEventListener("click", async () => {
-      const userName = localStorage.getItem("userName");
-      if (userName === comment.author) {
-        const confirmDelete = confirm(
-          "Are you sure you want to delete this comment?"
-        );
-        if (confirmDelete) {
-          await deleteComment(itemId, comment._id); // Assuming `deleteComment` is the API function
-          // alert("Comment deleted successfully!");
-
-          // Fetch and update the comments list after deletion
-          const updatedComments = await getComments(itemId);
-          updateCommentList(updatedComments, actionCell, itemId);
-        }
-      } else {
-        alert("This one is not yours.");
-      }
-    });
-
-    // Append the Delete button to the list item
-    listItem.appendChild(editButton);
-    listItem.appendChild(deleteButton);
-
-    // Add the list item to the comment list
-    commentList.appendChild(listItem);
-  });
-
-  // Append the updated comment list to the action cell
-  actionCell.appendChild(commentList);
-}
-
-export async function handleCreateComment(actionCell, newrow, item, e,viewCommentButton) {
-  e.target.disabled = true;
-  let textArea = document.createElement("textarea");
-  const postCommentButton = document.createElement("button");
-  textArea.id = "comment-section";
-  postCommentButton.innerText = "Post";
-  postCommentButton.id = "post-comment-button";
-  //post
-  postCommentButton.addEventListener("click", async () => {
-    const commentText = textArea.value.trim();
-    if (!commentText) {
-      alert("Comment cannot be empty!");
-      return;
-    }
-    const author = localStorage.getItem("userName");
-    // Post the comment to the server
-    await addComments(item._id, commentText, author);
-
-    // Clear the text area and UI elements for comment input
-    e.target.disabled = false;
-    actionCell.removeChild(postCommentButton);
-    actionCell.removeChild(textArea);
-    actionCell.removeChild(cancelButton);
-
-    // alert("Comment posted successfully!");
-
-    // Fetch and display the updated comments list dynamically
-    const comments = await getComments(item._id);
-    handleViewComment(actionCell,viewCommentButton,newrow,item);
-    updateCommentList(comments, newrow, item._id);
-    
-  });
-
-  const cancelButton = document.createElement("button");
-  cancelButton.innerText = "❌";
-  cancelButton.addEventListener("click", () => {
-    e.target.disabled = false;
-    actionCell.removeChild(postCommentButton);
-    actionCell.removeChild(textArea);
-    actionCell.removeChild(cancelButton);
-  });
-
-  textArea.setAttribute("cols", "50");
-  textArea.setAttribute("rows", "5");
-  textArea.setAttribute("placeholder", "Enter your message here");
-  actionCell.appendChild(textArea);
-  actionCell.appendChild(postCommentButton);
-  actionCell.appendChild(cancelButton);
-}
-
-
-export async function handleViewComment(actionCell, viewCommentButton, newrow, item) {
-  const hideCommentButton = document.createElement("button");
-  hideCommentButton.innerText = "Hide Comments";
-  actionCell.removeChild(viewCommentButton);
-  actionCell.appendChild(hideCommentButton);
-
-  const comments = await getComments(item._id);
-  updateCommentList(comments, newrow, item._id);
-
-  hideCommentButton.addEventListener("click", () => {
-    handleHideComment(actionCell, viewCommentButton, hideCommentButton, item);
-  });
-}
-export async function handleHideComment(actionCell, viewCommentButton, hideCommentButton, item) {
-  const commentList = document.getElementById(`comments-${item._id}`);
-  if (commentList) {
-    commentList.remove();
-  }
-  actionCell.removeChild(hideCommentButton);
-  actionCell.appendChild(viewCommentButton);
-}
-
 export async function handleFindAndDeleteElementOfMember(userName) {
   const member = await findMember(userName);
   for (const itemId of member.items) {
     console.log(itemId);
     deleteItem(itemId);
   }
-}
-
-export async function handleCreteFileBox(fileCell) {
-  const container = document.createElement("div");
-  container.classList.add("container");
-  container.id = "container-edit";
-
-  // Create file input
-  const fileInput = document.createElement("input");
-  fileInput.type = "file";
-  fileInput.id = "files-edit";
-  fileInput.name = "file";
-
-  // Create response div
-  const responseDiv = document.createElement("div");
-  responseDiv.id = "response";
-  responseDiv.classList.add("response");
-
-  // Append file input and response div to container
-  container.appendChild(fileInput);
-  container.appendChild(responseDiv);
-
-  // Append container to the body (or any specific parent element)
-  fileCell.appendChild(container);
-}
-
-
-export async function display_file(fileName, id, fileCell){
-  const fileList = document.createElement("div");
-  fileList.id = `file-list${fileName}`;
-  const downloadLink = document.createElement("a");
-  downloadLink.href = `${BACKEND_URL}/file/download/${id}`;
-  downloadLink.target = "_blank";
-  downloadLink.textContent = fileName.split("-",2)[1];
-
-  fileList.appendChild(downloadLink);
-
-  fileCell.appendChild(fileList);
 }

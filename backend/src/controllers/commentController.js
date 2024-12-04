@@ -1,26 +1,26 @@
 import Item from "../models/itemModel.js";
 
-// Add a comment to an item
+// เพิ่มคอมเมนต์เข้าในโน้ต
 export const addComment = async (req, res) => {
   try {
-    const { id } = req.params; // Get item ID
-    const { comment, author } = req.body; // Get comment text from the request body
+    const { id } = req.params; 
+    const { comment, author } = req.body;
 
     if (!comment || !comment.trim()) {
       return res.status(400).json({ message: "Comment cannot be empty!" });
     }
 
-    const item = await Item.findById(id); // Find the item by ID
+    const item = await Item.findById(id); 
     if (!item) {
       return res.status(404).json({ message: "Item not found" });
     }
 
     if (author === null) {
-      item.comments.push({ text: comment }); // Add the comment
+      item.comments.push({ text: comment }); 
     } else {
-      item.comments.push({ text: comment, author: author }); // Add the comment
+      item.comments.push({ text: comment, author: author }); 
     }
-    await item.save(); // Save the updated item
+    await item.save(); 
 
     res
       .status(201)
@@ -35,17 +35,17 @@ export const addComment = async (req, res) => {
   }
 };
 
-// Get all comments for an item
+// เก็บตอมเมนต์ทุกอันจากโน้ต
 export const getComments = async (req, res) => {
   try {
-    const { id } = req.params; // Get item ID
+    const { id } = req.params;
 
-    const item = await Item.findById(id); // Find the item by ID
+    const item = await Item.findById(id); 
     if (!item) {
       return res.status(404).json({ message: "Item not found" });
     }
 
-    res.status(200).json(item.comments); // Return all comments
+    res.status(200).json(item.comments); 
   } catch (error) {
     res
       .status(500)
@@ -62,7 +62,6 @@ export const deleteComment = async (req, res) => {
       return res.status(404).json({ error: "Item not found" });
     }
 
-    // Find and filter out the comment
     const updatedComments = item.comments.filter(
       (comment) => comment._id.toString() !== commentId
     );
@@ -71,7 +70,6 @@ export const deleteComment = async (req, res) => {
       return res.status(404).json({ error: "Comment not found" });
     }
 
-    // Save updated comments
     item.comments = updatedComments;
     await item.save();
 

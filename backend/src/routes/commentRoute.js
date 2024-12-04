@@ -6,8 +6,8 @@ const router = express.Router();
 
 // Item routes
 // Comment routes
-router.post("/:id/", commentController.addComment); // Add a comment
-router.get("/:id/", commentController.getComments); // Get all comments
-router.delete("/:id/:commentId", commentController.deleteComment); // Delete a member by ID
+router.post("/:id/", commentController.addComment); // เพิ่มคอมเมนต์
+router.get("/:id/", commentController.getComments); // เอาคอมเมนต์ทั้งหมด
+router.delete("/:id/:commentId", commentController.deleteComment); // ลบคอมเมนต์
 
 export default router;

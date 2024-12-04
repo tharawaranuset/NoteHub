@@ -16,8 +16,4 @@ router.patch("/:id/addeditor", itemController.addEditor);
 router.patch("/:id/deleditor", itemController.delEditor);
 router.patch("/:itemId/edit", itemController.editItems);
 
-// router.get("/", memberController.getMembers);  // Get all members
-// router.post("/", memberController.createMember);  // Create a new member
-// router.delete("/:id", memberController.deleteMember);  // Delete a member by ID
-
 export default router;

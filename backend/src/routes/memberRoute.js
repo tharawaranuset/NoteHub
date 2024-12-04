@@ -9,4 +9,5 @@ router.post("/", memberController.createMember);
 router.delete("/:userName", memberController.deleteMember);
 router.patch("/", memberController.updateMember);
 router.get("/find", memberController.findMember);
+
 export default router;

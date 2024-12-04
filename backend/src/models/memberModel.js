@@ -1,7 +1,5 @@
-// models/memberModel.js
 import mongoose from "mongoose";
 
-// Define the schema for Member
 const memberSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -12,12 +10,11 @@ const memberSchema = new mongoose.Schema({
   items: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Item", // Link the member to the Item model
+      ref: "Item",
     },
   ],
 });
 
-// Create and export the Member model
 const Member = mongoose.model("Member", memberSchema);
 
 export default Member;

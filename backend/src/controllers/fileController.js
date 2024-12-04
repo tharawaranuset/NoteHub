@@ -1,6 +1,6 @@
 import Item from "../models/itemModel.js";
 import path from "path";
-import fs from "fs/promises"; // Ensure fs.promises is used for async operations
+import fs from "fs/promises"; 
 
 export const downloadFile = async (req, res) => {
   const { id } = req.params;
@@ -14,7 +14,6 @@ export const downloadFile = async (req, res) => {
     console.log(filePath);
     await fs.access(filePath);
 
-    // If the file exists, send it
     res.download(filePath, fileName, (err) => {
       if (err) {
         console.error("Error during file download:", err);
@@ -39,10 +38,10 @@ export const deleteFile = async (req, res) => {
     const fileName = item.fileName;
     const filePath = path.resolve("..", "backend", "res", "uploads", fileName);
 
-    // Check if the file exists and delete it
+    // เช็คว่ามีไฟล์หรือเปล่า ถ้ามีก็ลบ
     try {
-      await fs.access(filePath); // Ensure the file exists
-      await fs.unlink(filePath); // Delete the file
+      await fs.access(filePath);
+      await fs.unlink(filePath);
       res.send(`File ${fileName} deleted successfully.`);
     } catch (err) {
       console.error("Error deleting file:", err.message);

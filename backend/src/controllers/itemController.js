@@ -1,7 +1,6 @@
 import Item from "../models/itemModel.js";
 
 export const createItem = async (req, res) => {
-  // if(!req.body.name || !req.body.subject || !req.body.note){
   try {
     if(req.body.editor===""){
       delete req.body.editor;
@@ -127,13 +126,13 @@ export const likeItems = async (req, res) => {
 };
 
 export const deleteItem = async (req, res) => {
-  const { id } = req.params; // Assuming you pass the item ID via the URL
+  const { id } = req.params; 
 
   try {
-    const deletedItem = await Item.findByIdAndDelete(id); // Delete item by ID
+    const deletedItem = await Item.findByIdAndDelete(id); // ลบโน้ตจาก ID
 
     if (!deletedItem) {
-      return res.status(404).json({ error: "Item not found" }); // Item not found
+      return res.status(404).json({ error: "Item not found" }); // ไม่เจอโน้ต
     }
 
     res.status(200).json({ message: "Item successfully deleted" });
@@ -143,11 +142,10 @@ export const deleteItem = async (req, res) => {
 };
 
 export const filterItems = async (req, res) => {
-  // TODO3: implement this filter function
   try {
     const { filterName, filterSubject } = req.query;
 
-    // Build the query object
+    // สร้าง query object
     let query = {};
     if (filterSubject && filterSubject !== "ทั้งหมด") {
       query.subject = filterSubject;
@@ -157,10 +155,10 @@ export const filterItems = async (req, res) => {
       query.name = filterName;
     }
 
-    // Query the database
+    // ค้นหาจาก database
     const items = await Item.find(query);
 
-    // Return the filtered items
+    // คืนค่าไอเทมที่กรอง
     res.status(200).json(items);
   } catch (err) {
     res.status(500).json({ error: "Internal server error." });

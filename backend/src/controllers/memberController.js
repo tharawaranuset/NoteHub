@@ -1,9 +1,7 @@
-// controllers/memberController.js
 import Member from "../models/memberModel.js";
-import Item from "../models/itemModel.js"; // Import Item model to delete associated items
-//import { response } from "express";
+import Item from "../models/itemModel.js"; 
 
-// Create a new member
+// สร้าง member (ผู้ใช้)
 export const createMember = async (req, res) => {
   try {
     const { userName } = req.body;
@@ -31,17 +29,17 @@ export const createMember = async (req, res) => {
   }
 };
 
-// Get all members
+// เอาผู้ใช้ทั้งหมด
 export const getMembers = async (req, res) => {
   try {
-    const members = await Member.find().populate("items"); // Populate the items associated with each member
+    const members = await Member.find().populate("items"); 
     res.status(200).json(members);
   } catch (err) {
     res.status(500).json({ error: "Failed to fetch members" });
   }
 };
 
-// Delete a member and remove associated items
+// ลบผู้ใช้และโน้ตที่เกี่ยวข้องกับผู้ใช้คนนั้น
 export const deleteMember = async (req, res) => {
   const { userName } = req.params;
   try {

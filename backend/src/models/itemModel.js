@@ -39,7 +39,7 @@ const itemSchema = new mongoose.Schema({
     default: null, // ค่าเริ่มต้นเป็น null
     required: false, // ไม่จำเป็นต้องใส่
   },
-  comments: [commentSchema], // Embed comments
+  comments: [commentSchema],
 });
 
 const Item = mongoose.model("Item", itemSchema);

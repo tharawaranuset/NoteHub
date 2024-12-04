@@ -89,25 +89,25 @@ section {
 }
 
 #main-table {
-  width: 100%; /* Set to auto to let the columns shrink naturally */
+  width: 100%;
 }
 
 #main-table th:nth-child(1),
 #main-table td:nth-child(1) {
-  width: 10%; /* Allow this column to expand */
+  width: 10%; 
 }
 #main-table th:nth-child(2),
 #main-table td:nth-child(2) {
-  width: 10%; /* Allow this column to expand */
+  width: 10%; 
 }
 #main-table th:nth-child(3),
 #main-table td:nth-child(3) {
-  width: 65%; /* Allow this column to expand */
+  width: 65%; 
 }
 
 #main-table th:nth-child(4),
 #main-table td:nth-child(4) {
-  width: 15%; /* Allow this column to expand */
+  width: 15%; 
 }
 
 #note-to-add {
@@ -118,9 +118,9 @@ section {
 }
 
 #add-newrow {
-  flex-shrink: 0; /* Prevent the button from shrinking */
-  width: 60px; /* Set a fixed width for the button */
-  padding: 5px 10px; /* Adjust button padding if needed */
+  flex-shrink: 0; /* กันปุ่มไม่ให้หด */
+  width: 60px; /* เซ็ตความกว้างปุ่ม */
+  padding: 5px 10px; /* ปรับ padding ของปุ่ม */
 }
 
 #main-table input,
@@ -179,25 +179,6 @@ section {
   animation: filtering 10s infinite linear;
 }
 
-/*#add-like {
-  color: black;
-  border-radius: 8px;
-  padding: 5px 10px;
-  border: 1px solid #aaa;
-  background: white;
-  width: auto;
-  cursor: pointer;
-}
-
-#add-like:hover {
-  color: white;
-  animation: filtering 10s infinite linear;
-}
-
-#add-comment-button:hover {
-  background-color: #218838;
-}*/
-
 #comment-input-container {
   margin-top: 10px;
 }
@@ -255,7 +236,7 @@ section {
     background: #ff0000;
   }
 }
-/* --- Add Logo --- */
+/* --- เพิ่มโลโก้ --- */
 .app-header {
   font-size: 2em;
   text-align: center;
@@ -265,6 +246,7 @@ section {
   content: "📝"; /* เพิ่ม emoji ที่ด้านหน้าชื่อ */
   margin-right: 10px;
 }
+
 /* --- Media Queries for Responsive Design --- */
 
 /* สำหรับแท็บเล็ต (หน้าจอขนาด 768px ถึง 1024px) */
@@ -446,7 +428,7 @@ section {
   transition: background-color 0.3s ease;
 }
 
-/* Animations for saveNameButton*/
+/* อนิเมชั่นของ saveNameButton*/
 @keyframes pulse {
   0%,
   100% {
