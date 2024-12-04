@@ -33,6 +33,11 @@ export async function populateMembers() {
     const option = document.createElement("option");
     option.value = option.textContent = member.name;
     filterSelect.appendChild(option);
+  });
+
+  members.forEach((member) => {
+    const option = document.createElement("option");
+    option.value = option.textContent = member.name;
     filterSelectEditor.appendChild(option);
   });
 }

@@ -282,24 +282,38 @@ export async function handleEditItem(itemId, item, noteCell, fileCell) {
   }
 }
 
-export async function handleAddEditorin(id,name, userName) {
+export async function handleAddEditorin(id, name, userName) {
   if(name===localStorage.getItem("userName")){
-  await handleAddEditor(id, userName);
-  await fetchAndDrawTable();
+    const subjectToAdd = document.getElementById("subject-to-add");
+    const noteToAdd = document.getElementById("note-to-add");
+    const fileInput = document.getElementById("files");
+    await handleAddEditor(id, userName);
+    await fetchAndDrawTable();
+    subjectToAdd.value = "ทั้งหมด";
+    noteToAdd.value = "";
+    fileInput.value = "";
+    clearFilter();
   }
   else{
-    alert("This one is not your");
+    alert("This one is not yours.");
   }
 }
 
-export async function handleDelEditorin(id,name, userName) {
+export async function handleDelEditorin(id, name, userName) {
   if(name===localStorage.getItem("userName")){
-  await handleDelEditor(id, userName);
-  await fetchAndDrawTable();
-}
-else{
-  alert("This one is not your");
-}
+    const subjectToAdd = document.getElementById("subject-to-add");
+    const noteToAdd = document.getElementById("note-to-add");
+    const fileInput = document.getElementById("files");
+    await handleDelEditor(id, userName);
+    await fetchAndDrawTable();
+    subjectToAdd.value = "ทั้งหมด";
+    noteToAdd.value = "";
+    fileInput.value = "";
+    clearFilter();
+  }
+  else{
+    alert("This one is not yours.");
+  }
 }
 
 export async function handleCreateItem() {
