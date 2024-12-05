@@ -392,7 +392,7 @@ export async function handleCreateItem() {
     }
     const id = await createItem(payload);
     const userName = nameToAdd;
-    await updateMember(userName, id);
+    // await updateMember(userName, id);
     await fetchAndDrawTable();
 
     subjectToAdd.value = "ทั้งหมด";
